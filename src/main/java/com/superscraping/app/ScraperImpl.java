@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.superscraping.app.page;
+package com.superscraping.app;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +12,8 @@ import java.util.Map;
  *
  * @author Norio
  */
-public interface GetContentsDataAvailable {
+public interface ScraperImpl {
     
-    public List<Map<String,String>> getHtmlContents(List<String> contetnsLinkListAll);
+    public List<Map<String,String>> scarapingContents(String linkUrl);
+  
 }

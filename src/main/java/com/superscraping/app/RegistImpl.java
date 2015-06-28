@@ -3,15 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.superscraping.app.link;
+package com.superscraping.app;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author Norio
  */
-public interface GetLinkDataAvailable {
+public interface RegistImpl {
     
-    public List<String> getContentsFromHtml(String linkUrl);
+    public void registContents(List<Map<String, String>> contentDetail);
 }

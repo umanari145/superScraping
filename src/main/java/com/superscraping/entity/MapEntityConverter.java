@@ -11,8 +11,9 @@ import java.util.Map;
  *
  * @author Norio
  */
-public abstract class MapEntityConverter {
 
-    public abstract BaseProduct mapToEntity(Map<String, String> contentsMap);
+public interface MapEntityConverter {
+
+    public BaseProduct mapToEntity(Map<String, String> contentsMap);
         
 }

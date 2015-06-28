@@ -5,11 +5,10 @@
  */
 package com.superscraping.app;
 
-import com.superscraping.app.link.LinkGetter;
-import com.superscraping.app.page.PageGetter;
-import com.superscraping.em.ProductDB;
+import com.superscraping.app.link.DmmScraper;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,31 +24,18 @@ public class Controller {
 
     @Getter
     @Setter
-    private List<String> jenre;
-
-    @Getter
-    @Setter
-    private List<String> actress;
-
-    @Getter
-    @Setter
-    private List<String> maker;
-
-    @Getter
-    @Setter
     private boolean testFlg = false;
 
     @Getter
     @Setter
-    private ProductDB productDb;
+    @Inject
+    private RegistImpl register;
+
 
     @Getter
     @Setter
-    private LinkGetter linkGetter;
-
-    @Getter
-    @Setter
-    private PageGetter pageGetter;
+    @Inject
+    private ScraperImpl scraper;
 
     @Getter
     @Setter
@@ -61,10 +47,7 @@ public class Controller {
         controller.start();
     }
 
-    public Controller() {
-        productDb = new ProductDB();
-        linkGetter = new LinkGetter();
-        pageGetter = new PageGetter();
+    public Controller() {   
         configManager = new ConfigManager();
     }
 
@@ -76,16 +59,15 @@ public class Controller {
     }
 
     public void init() {
-        this.siteUrl = configManager.SITE_URL;
+        this.siteUrl = ConfigManager.SITE_URL;
     }
 
     public void action() {
-        //リンクを取得
-        List<String> contentsLinkListAll = linkGetter.getContentsLink(siteUrl);
+       
         //リンク一覧からコンテンツを取得
-        List<Map<String, String>> contensMap = pageGetter.getContentes(contentsLinkListAll);
-
-        productDb.registEntity(contensMap);
+        List<Map<String, String>> contensMap = this.scraper.scarapingContents(siteUrl);
+        //リンクを登録
+        register.registContents(contensMap);
     }
 
 }

@@ -5,13 +5,16 @@
  */
 package com.superscraping.em;
 
+import com.superscraping.app.RegistImpl;
 import com.superscraping.entity.BaseProduct;
-import com.superscraping.entity.DmmConverter;
 import com.superscraping.entity.DmmProduct;
 import com.superscraping.entity.MapEntityConverter;
+import com.superscraping.util.Tracer;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -22,12 +25,16 @@ import javax.persistence.Persistence;
  * @author Norio
  */
 @Stateless
-public class ProductDB {
+@Interceptors(Tracer.class)
+public class ProductDB implements RegistImpl{
 
     private EntityManagerFactory fac;
     private EntityManager em;
     private EntityTransaction tx;
 
+    @Inject
+    private MapEntityConverter mapEntityConverter;
+    
     public ProductDB() {
         fac = Persistence.createEntityManagerFactory("com_SuperScraping_jar_1.0-SNAPSHOTPU");
         em = fac.createEntityManager();
@@ -48,10 +55,9 @@ public class ProductDB {
         return em.createQuery(" SELECT p FROM Product p ", DmmProduct.class).getResultList();
     }
 
-    public void registEntity(List<Map<String, String>> contentDetail) {
-
+    @Override
+    public void registContents(List<Map<String, String>> contentDetail) {
         contentDetail.stream().forEach(contents -> {    
-            MapEntityConverter mapEntityConverter = new DmmConverter();
             BaseProduct product = mapEntityConverter.mapToEntity(contents);
             this.create(product);
         });

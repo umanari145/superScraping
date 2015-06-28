@@ -10,12 +10,18 @@ import java.util.Date;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.enterprise.context.Dependent;
 
 /**
  *
  * @author Norio
  */
-public class DmmConverter extends MapEntityConverter {
+@Dependent
+public class DmmConverter implements MapEntityConverter {
+    
+    public DmmConverter(){
+    
+    }
     
     @Override
     public BaseProduct mapToEntity(Map<String, String> contentsMap) {
