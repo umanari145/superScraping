@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.superscraping.entity;
+package com.superscraping.em.helper;
 
+import com.superscraping.entity.BaseProduct;
+import com.superscraping.entity.DmmProduct;
 import com.superscraping.util.Utility;
 import java.util.Date;
 import java.util.Map;

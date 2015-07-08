@@ -6,9 +6,9 @@
 package com.superscraping.app;
 
 import com.superscraping.app.link.DmmScraper;
+import com.superscraping.em.DBRegister;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,13 +28,11 @@ public class Controller {
 
     @Getter
     @Setter
-    @Inject
     private RegistImpl register;
 
 
     @Getter
     @Setter
-    @Inject
     private ScraperImpl scraper;
 
     @Getter
@@ -49,6 +47,10 @@ public class Controller {
 
     public Controller() {   
         configManager = new ConfigManager();
+        //スクレイピングオブジェクトの初期化
+        scraper = new DmmScraper();
+        //登録オブジェクトの初期化
+        register = new DBRegister();
     }
 
     public void start() {
@@ -65,7 +67,7 @@ public class Controller {
     public void action() {
        
         //リンク一覧からコンテンツを取得
-        List<Map<String, String>> contensMap = this.scraper.scarapingContents(siteUrl);
+        List<Map<String, String>> contensMap = scraper.scarapingContents(siteUrl);
         //リンクを登録
         register.registContents(contensMap);
     }

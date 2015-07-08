@@ -7,18 +7,20 @@ package com.superscraping.em;
 
 import com.superscraping.app.RegistImpl;
 import com.superscraping.entity.BaseProduct;
+import com.superscraping.em.helper.DmmConverter;
 import com.superscraping.entity.DmmProduct;
-import com.superscraping.entity.MapEntityConverter;
+import com.superscraping.em.helper.MapEntityConverter;
 import com.superscraping.util.Tracer;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -26,19 +28,22 @@ import javax.persistence.Persistence;
  */
 @Stateless
 @Interceptors(Tracer.class)
-public class ProductDB implements RegistImpl{
+public class DBRegister implements RegistImpl{
 
     private EntityManagerFactory fac;
     private EntityManager em;
     private EntityTransaction tx;
 
-    @Inject
+    @Getter
+    @Setter
     private MapEntityConverter mapEntityConverter;
     
-    public ProductDB() {
+    public DBRegister() {
         fac = Persistence.createEntityManagerFactory("com_SuperScraping_jar_1.0-SNAPSHOTPU");
         em = fac.createEntityManager();
         tx = em.getTransaction();
+        
+        mapEntityConverter = new DmmConverter();
     }
 
     public void create(BaseProduct product) {

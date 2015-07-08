@@ -11,7 +11,7 @@ package com.superscraping.app;
  */
 public class ConfigManager {
     
-    public static boolean CONTENTS_TEST_FLG = false;
+    public static boolean IS_CONTENTS_TEST = true;
     
     public static final String SITE_URL="http://www.dmm.co.jp/digital/videoa/-/list/=/article=keyword/id=1018/sort=ranking/"; 
     

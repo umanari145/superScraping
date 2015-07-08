@@ -72,7 +72,7 @@ public class DmmScraper implements ScraperImpl {
                 String link = contentsLinkAttr.get("href");
                 contentsLinkList.add(link);
 
-                if (ConfigManager.CONTENTS_TEST_FLG && testloopCnt > 1) {
+                if (ConfigManager.IS_CONTENTS_TEST && testloopCnt > 1) {
                     break;
                 }
             }
