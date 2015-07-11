@@ -5,12 +5,13 @@
  */
 package com.superscraping.app;
 
-import com.superscraping.app.link.DmmScraper;
-import com.superscraping.em.DBRegister;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
+import org.jboss.weld.environment.se.Weld;
+import org.jboss.weld.environment.se.WeldContainer;
 
 /**
  *
@@ -26,31 +27,26 @@ public class Controller {
     @Setter
     private boolean testFlg = false;
 
-    @Getter
-    @Setter
+    @Inject
     private RegistImpl register;
 
 
-    @Getter
-    @Setter
+    @Inject
     private ScraperImpl scraper;
 
-    @Getter
-    @Setter
+    @Inject
     private ConfigManager configManager;
 
     public static void main(String[] args) {
-        //スタート
-        Controller controller = new Controller();
+        //Weldのコンテナを起動
+        Weld weld = new Weld();
+        WeldContainer container = weld.initialize();
+        Controller controller = container.instance().select(Controller.class).get();
         controller.start();
+        weld.shutdown();
     }
 
     public Controller() {   
-        configManager = new ConfigManager();
-        //スクレイピングオブジェクトの初期化
-        scraper = new DmmScraper();
-        //登録オブジェクトの初期化
-        register = new DBRegister();
     }
 
     public void start() {
@@ -61,7 +57,7 @@ public class Controller {
     }
 
     public void init() {
-        this.siteUrl = ConfigManager.SITE_URL;
+        this.siteUrl = configManager.SITE_URL;
     }
 
     public void action() {

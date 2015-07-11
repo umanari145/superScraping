@@ -30,8 +30,6 @@ import org.jsoup.select.Elements;
  *
  * @author Norio
  */
-@Dependent
-@Alternative
 public class DmmScraper implements ScraperImpl {
 
     public DmmScraper() {
@@ -84,6 +82,12 @@ public class DmmScraper implements ScraperImpl {
         return contentsLinkList;
     }
 
+    /**
+     * 商品リンクからフィールド→値形式のMapのコンテンツデータを取得
+     *
+     * @param contentsLink 単一商品のリンク
+     * @return 商品ごとの情報をList.Map形式で取得
+     */
     private List<Map<String, String>> getHtmlContents(List<String> contentsLink) {
 
         List<Map<String, String>> contentsMap = new ArrayList<>();
@@ -95,6 +99,12 @@ public class DmmScraper implements ScraperImpl {
         return contentsMap;
     }
 
+    /**
+     * リンクから単一商品のHTMLを解析
+     *
+     * @param contentsUrl　単一商品のURL
+     * @return 商品データの文字列(:\nでつなぐ)
+     */
     private String getSingleContentsDetail(String contentsUrl) {
         StringBuilder contentsDetail = null;
         try {
@@ -111,6 +121,30 @@ public class DmmScraper implements ScraperImpl {
         return contentsDetail.toString();
     }
 
+    /**
+     * 商品データをマップ形式に変換する
+     * 
+     * @param contentsDetail 商品詳細データ
+     * @return フィールド→値形式のMap
+     */
+    private Map<String, String> convertContentsDetail(String contentsDetail) {
+        contentsDetail = contentsDetail.replaceAll("：\n", ":");
+        String[] contentsColumn = contentsDetail.split("\n");
+
+        Map<String, String> contentsHashMap = new HashMap<>();
+        for (String singleContentsColumn : contentsColumn) {
+            String[] contentsDetailData = singleContentsColumn.split(":");
+            contentsHashMap.put(contentsDetailData[0], contentsDetailData[1]);
+        }
+        return contentsHashMap;
+    }
+
+    /**
+     * Docオブジェクトからそれぞれテキストデータを取り出す
+     * 
+     * @param doc 商品のdocオブジェクト
+     * @return 文字列
+     */
     private StringBuilder getHTMLAttribute(Document doc) {
         StringBuilder contentsDetail = new StringBuilder();
 
@@ -126,6 +160,12 @@ public class DmmScraper implements ScraperImpl {
         return contentsDetail;
     }
 
+    /**
+     * 商品名の取得
+     * 
+     * @param doc docオブジェクト
+     * @return 商品名の取得
+     */
     private StringBuilder getTitile(Document doc) {
         StringBuilder titleStr = new StringBuilder();
         Element title = doc.getElementById("title");
@@ -134,6 +174,12 @@ public class DmmScraper implements ScraperImpl {
         return titleStr;
     }
 
+    /**
+     * 商品要約情報の取得
+     * 
+     * @param doc　docオブジェクト
+     * @return 商品要約
+     */
     private StringBuilder getSummary(Document doc) {
         StringBuilder summaryStr = new StringBuilder();
         Elements summaryElement = doc.getElementsByClass("lh4");
@@ -142,6 +188,12 @@ public class DmmScraper implements ScraperImpl {
         return summaryStr;
     }
 
+    /**
+     * table形式データの取得
+     * 
+     * @param doc docオブジェクト
+     * @return それぞれのデータを文字列にて取得
+     */
     private StringBuilder getContentsFromTableTag(Document doc) {
         StringBuilder tableStr = new StringBuilder();
         Element table = doc.select("table[class=mg-b20]").first();
@@ -152,15 +204,4 @@ public class DmmScraper implements ScraperImpl {
         return tableStr;
     }
 
-    private Map<String, String> convertContentsDetail(String contentsDetail) {
-        contentsDetail = contentsDetail.replaceAll("：\n", ":");
-        String[] contentsColumn = contentsDetail.split("\n");
-
-        Map<String, String> contentsHashMap = new HashMap<>();
-        for (String singleContentsColumn : contentsColumn) {
-            String[] contentsDetailData = singleContentsColumn.split(":");
-            contentsHashMap.put(contentsDetailData[0], contentsDetailData[1]);
-        }
-        return contentsHashMap;
-    }
 }

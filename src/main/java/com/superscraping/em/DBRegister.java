@@ -10,40 +10,33 @@ import com.superscraping.entity.BaseProduct;
 import com.superscraping.em.helper.DmmConverter;
 import com.superscraping.entity.DmmProduct;
 import com.superscraping.em.helper.MapEntityConverter;
-import com.superscraping.util.Tracer;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  *
  * @author Norio
  */
 @Stateless
-@Interceptors(Tracer.class)
 public class DBRegister implements RegistImpl{
 
     private EntityManagerFactory fac;
     private EntityManager em;
     private EntityTransaction tx;
 
-    @Getter
-    @Setter
+    @Inject
     private MapEntityConverter mapEntityConverter;
     
     public DBRegister() {
         fac = Persistence.createEntityManagerFactory("com_SuperScraping_jar_1.0-SNAPSHOTPU");
         em = fac.createEntityManager();
         tx = em.getTransaction();
-        
-        mapEntityConverter = new DmmConverter();
     }
 
     public void create(BaseProduct product) {

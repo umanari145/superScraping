@@ -9,10 +9,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * 登録用のインターフェイス
  * @author Norio
  */
 public interface RegistImpl {
     
+    /**
+     * 商品データの登録
+     * 
+     * @param contentDetail List.Map形式の商品データ 
+     */
     public void registContents(List<Map<String, String>> contentDetail);
 }
