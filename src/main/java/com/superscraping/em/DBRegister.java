@@ -10,11 +10,9 @@ import com.superscraping.entity.BaseProduct;
 import com.superscraping.em.helper.DmmConverter;
 import com.superscraping.entity.DmmProduct;
 import com.superscraping.em.helper.MapEntityConverter;
-import com.superscraping.util.Tracer;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -27,7 +25,6 @@ import lombok.Setter;
  * @author Norio
  */
 @Stateless
-@Interceptors(Tracer.class)
 public class DBRegister implements RegistImpl{
 
     private EntityManagerFactory fac;
