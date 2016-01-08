@@ -39,6 +39,11 @@ public class DmmProduct extends BaseProduct implements Serializable {
     private String actress;
     
     @Size(max = 255)
+    @Column(name = "pictureUrl")
+    @Getter @Setter    
+    private String pictureUrl;
+    
+    @Size(max = 255)
     @Column(name = "maker")
     @Getter @Setter    
     private String maker;

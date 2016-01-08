@@ -15,5 +15,7 @@ public class ConfigManager {
     
     public static final String SITE_URL="http://www.dmm.co.jp/digital/videoa/-/list/=/article=keyword/id=1018/sort=ranking/"; 
     
+    public static final int TEST_CONTENTS_COUNT=15; 
+       
     public ConfigManager(){}
 }

@@ -46,9 +46,9 @@ public class DmmScraper implements ScraperImpl {
         //リンクを集める  
         List<String> contentsLink = this.getContentsFromHtml(linkUrl);
         //コンテンツを集める
-        List<Map<String, String>> contensDetailList = this.getHtmlContents(contentsLink);
+        List<Map<String, String>> contentsList = this.getHtmlContents(contentsLink);
 
-        return contensDetailList;
+        return contentsList;
     }
 
     /**
@@ -70,7 +70,7 @@ public class DmmScraper implements ScraperImpl {
                 String link = contentsLinkAttr.get("href");
                 contentsLinkList.add(link);
 
-                if (ConfigManager.IS_CONTENTS_TEST && testloopCnt > 1) {
+                if (ConfigManager.IS_CONTENTS_TEST && testloopCnt > ConfigManager.TEST_CONTENTS_COUNT ) {
                     break;
                 }
             }
@@ -90,48 +90,46 @@ public class DmmScraper implements ScraperImpl {
      */
     private List<Map<String, String>> getHtmlContents(List<String> contentsLink) {
 
-        List<Map<String, String>> contentsMap = new ArrayList<>();
+        List<Map<String, String>> contentsList = new ArrayList<>();
         for (String link : contentsLink) {
-            String contentsDetail = getSingleContentsDetail(link);
-            Map<String, String> tmpMap = convertContentsDetail(contentsDetail);
-            contentsMap.add(tmpMap);
+            Map<String, String> contentsDetailMap= getSingleContentsDetail(link);
+            contentsList.add(contentsDetailMap);
         }
-        return contentsMap;
+        return contentsList;
     }
 
     /**
      * リンクから単一商品のHTMLを解析
      *
      * @param contentsUrl　単一商品のURL
-     * @return 商品データの文字列(:\nでつなぐ)
+     * @return 商品データのMap
      */
-    private String getSingleContentsDetail(String contentsUrl) {
-        StringBuilder contentsDetail = null;
+    private Map<String,String> getSingleContentsDetail(String contentsUrl) {
+        Map<String,String> contentsDetailMap = new HashMap<>();
         try {
-            contentsDetail = new StringBuilder();
             URL url = new URL(contentsUrl);
             Document doc = Jsoup.parse(url, 3000);
-            contentsDetail = getHTMLAttribute(doc);
+            contentsDetailMap = getSingcleContentsMap(doc);
 
         } catch (MalformedURLException ex) {
             Logger.getLogger(DmmScraper.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(DmmScraper.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return contentsDetail.toString();
+        return contentsDetailMap;
     }
 
     /**
      * 商品データをマップ形式に変換する
      * 
+     * @param contentsMap  key=>value型のマップデータ
      * @param contentsDetail 商品詳細データ
      * @return フィールド→値形式のMap
      */
-    private Map<String, String> convertContentsDetail(String contentsDetail) {
+    private Map<String, String> convertContentsDetail(Map<String,String> contentsHashMap, String contentsDetail) {
         contentsDetail = contentsDetail.replaceAll("：\n", ":");
         String[] contentsColumn = contentsDetail.split("\n");
 
-        Map<String, String> contentsHashMap = new HashMap<>();
         for (String singleContentsColumn : contentsColumn) {
             String[] contentsDetailData = singleContentsColumn.split(":");
             contentsHashMap.put(contentsDetailData[0], contentsDetailData[1]);
@@ -143,21 +141,29 @@ public class DmmScraper implements ScraperImpl {
      * Docオブジェクトからそれぞれテキストデータを取り出す
      * 
      * @param doc 商品のdocオブジェクト
-     * @return 文字列
+     * @return 単品諸品データのMap
      */
-    private StringBuilder getHTMLAttribute(Document doc) {
-        StringBuilder contentsDetail = new StringBuilder();
+    private Map<String,String> getSingcleContentsMap(Document doc) {
+        
+        Map<String,String> contentsHashMap = new HashMap<>();
+        //商品title
+        String titleStr = getTitile(doc);
+        contentsHashMap.put("productName", titleStr);
 
-        StringBuilder titleStr = getTitile(doc);
-        contentsDetail.append(titleStr);
+        //要約
+        String summaryStr = getSummary(doc);
+        contentsHashMap.put("summary",summaryStr);
 
-        StringBuilder summaryStr = getSummary(doc);
-        contentsDetail.append(summaryStr);
-
+        //拡大画像
+        String pictureStr = getPicture(doc);
+        contentsHashMap.put("pictureUrl",pictureStr);
+        
+        //テーブル系のデータ
         StringBuilder tableStr = getContentsFromTableTag(doc);
-        contentsDetail.append(tableStr);
+        convertContentsDetail(contentsHashMap, tableStr.toString());
 
-        return contentsDetail;
+
+        return contentsHashMap;
     }
 
     /**
@@ -166,12 +172,9 @@ public class DmmScraper implements ScraperImpl {
      * @param doc docオブジェクト
      * @return 商品名の取得
      */
-    private StringBuilder getTitile(Document doc) {
-        StringBuilder titleStr = new StringBuilder();
+    private String getTitile(Document doc) {
         Element title = doc.getElementById("title");
-        titleStr.append("productName").append("：\n");
-        titleStr.append(title.text()).append("\n");
-        return titleStr;
+        return title.text();
     }
 
     /**
@@ -180,12 +183,9 @@ public class DmmScraper implements ScraperImpl {
      * @param doc　docオブジェクト
      * @return 商品要約
      */
-    private StringBuilder getSummary(Document doc) {
-        StringBuilder summaryStr = new StringBuilder();
+    private String getSummary(Document doc) {
         Elements summaryElement = doc.getElementsByClass("lh4");
-        summaryStr.append("summary").append("：\n");
-        summaryStr.append(summaryElement.text()).append("\n");
-        return summaryStr;
+        return summaryElement.text();
     }
 
     /**
@@ -200,8 +200,21 @@ public class DmmScraper implements ScraperImpl {
         Elements elTd = table.select("td");
         for (Element el : elTd) {
             tableStr.append(el.text()).append("\n");
-        }
+        }     
         return tableStr;
+    }
+
+    /**
+     * 商品画像を取得
+     * 
+     * @param doc ドキュメントオブジェクト
+     * @return 拡大画像のURL
+     */
+    private String getPicture(Document doc) {
+        StringBuilder pictureStr = new StringBuilder();
+        Elements pictureElement =  doc.select("[name=package-image]");
+        String pictureUrl = pictureElement.get(1).attr("href");
+        return pictureUrl;
     }
 
 }

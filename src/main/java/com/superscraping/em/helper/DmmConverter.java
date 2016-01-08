@@ -20,15 +20,15 @@ import javax.enterprise.context.Dependent;
  */
 @Dependent
 public class DmmConverter implements MapEntityConverter {
-    
-    public DmmConverter(){
-    
+
+    public DmmConverter() {
+
     }
-    
+
     @Override
     public BaseProduct mapToEntity(Map<String, String> contentsMap) {
         DmmProduct product = new DmmProduct();
-        
+
         contentsMap.forEach((key, value) -> {
             switch (key) {
                 case "出演者":
@@ -57,13 +57,16 @@ public class DmmConverter implements MapEntityConverter {
                     String summary = convertSummary(value);
                     product.setSummary(summary);
                     break;
+                case "pictureUrl":
+                    product.setPictureUrl(value);
+                    break;
             }
         });
-        
+
         return product;
     }
-    
-    public String convertSummary(String textData) {        
+
+    public String convertSummary(String textData) {
         String beforeRegex = "(.*?)※ 配信方法(.*?)ご注意ください。";
         //改行を含む場合はこのプロパティがいる
         Pattern p = Pattern.compile(beforeRegex, Pattern.DOTALL);
