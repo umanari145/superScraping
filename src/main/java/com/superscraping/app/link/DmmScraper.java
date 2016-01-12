@@ -17,9 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Alternative;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
@@ -32,6 +31,11 @@ import org.jsoup.select.Elements;
  */
 public class DmmScraper implements ScraperImpl {
 
+    /**
+     * 総商品数
+     */
+    private Integer totalItemCount;
+    
     public DmmScraper() {
     }
 
@@ -63,6 +67,9 @@ public class DmmScraper implements ScraperImpl {
             Document document = Jsoup.connect(linkUrl).get();
             Elements eles = document.getElementsByAttributeValueMatching("href", Pattern.compile("^.*detail/=/cid.*$"));
             int testloopCnt = 0;
+            //総商品数の取得
+            totalItemCount = getItemTotalCount( document );
+
             for (Iterator<Element> iterator = eles.iterator(); iterator.hasNext();) {
                 testloopCnt++;
                 Element contentsLinkEle = iterator.next();
@@ -82,6 +89,28 @@ public class DmmScraper implements ScraperImpl {
         return contentsLinkList;
     }
 
+    /**
+     * 総商品数の出力
+     * 
+     * @param document ドキュメントオブジェクト
+     * @return 総商品数
+     */
+    private Integer getItemTotalCount(Document document){
+        Integer tmpTotalItemCount=0;
+        String totalItemCountElementString = document.select("div[class=list-boxcaptside list-boxpagenation] p").first().text();
+        
+        String regex ="(.*?)タイトル中.*?";
+
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(totalItemCountElementString);
+        
+        if( m.find()){
+            String totalItemCountStr = m.group(1);
+            tmpTotalItemCount = Integer.parseInt(totalItemCountElementString);      
+        }
+        return tmpTotalItemCount;
+    }
+    
     /**
      * 商品リンクからフィールド→値形式のMapのコンテンツデータを取得
      *
