@@ -106,7 +106,7 @@ public class DmmScraper implements ScraperImpl {
         
         if( m.find()){
             String totalItemCountStr = m.group(1);
-            tmpTotalItemCount = Integer.parseInt(totalItemCountElementString);      
+            tmpTotalItemCount = Integer.parseInt(totalItemCountStr);      
         }
         return tmpTotalItemCount;
     }
