@@ -3,30 +3,33 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.superscraping.em.helper;
+package com.superscraping.em;
 
-import com.superscraping.entity.BaseProduct;
+import com.superscraping.entity.BaseEntity;
 import com.superscraping.entity.DmmProduct;
+import com.superscraping.em.helper.MapEntityConverter;
 import com.superscraping.util.Utility;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.enterprise.context.Dependent;
+import javax.persistence.EntityManager;
 
 /**
  *
  * @author Norio
  */
-@Dependent
-public class DmmConverter implements MapEntityConverter {
+public class ProductRegister extends DBbase implements MapEntityConverter{
 
-    public DmmConverter() {
-
+    private EntityManager em;
+    
+    public List<DmmProduct> getAll() {
+        return em.createQuery(" SELECT p FROM Product p ", DmmProduct.class).getResultList();
     }
 
     @Override
-    public BaseProduct mapToEntity(Map<String, String> contentsMap) {
+    public BaseEntity mapToEntity(Map<String, String> contentsMap) {
         DmmProduct product = new DmmProduct();
 
         contentsMap.forEach((key, value) -> {
@@ -38,7 +41,8 @@ public class DmmConverter implements MapEntityConverter {
                     product.setProductCode(value);
                     break;
                 case "ジャンル":
-                    product.setGenre(value);
+                    //&nbsp;が2つ分の置換はこれで行う
+                    product.setGenre(value.replace("\u00a0\u00a0", " "));
                     break;
                 case "レーベル":
                     product.setLabel(value);
@@ -65,7 +69,7 @@ public class DmmConverter implements MapEntityConverter {
 
         return product;
     }
-
+    
     public String convertSummary(String textData) {
         String beforeRegex = "(.*?)※ 配信方法(.*?)ご注意ください。";
         //改行を含む場合はこのプロパティがいる
@@ -75,4 +79,5 @@ public class DmmConverter implements MapEntityConverter {
         String textData2 = m.replaceAll(afterRegex);
         return textData2;
     }
+
 }

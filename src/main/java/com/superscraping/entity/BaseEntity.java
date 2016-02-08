@@ -14,8 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,8 +22,8 @@ import lombok.Setter;
  * @author Norio
  */
 @MappedSuperclass
-public abstract class BaseProduct {
-
+public abstract class BaseEntity {
+   
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -34,34 +32,32 @@ public abstract class BaseProduct {
     @Setter
     private Integer id;
 
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "productName")
-    @Getter
-    @Setter
-    private String productName;
-
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "create_date")
+    @Column(name = "created")
     @Temporal(TemporalType.TIMESTAMP)
-    @Getter
-    @Setter
-    private Date createDate;
-
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "update_datetime")
+    @Getter 
+    @Setter    
+    private Date created;
+    
+    @Column(name = "modified")
     @Temporal(TemporalType.TIMESTAMP)
-    @Getter
+    @Getter 
     @Setter
-    private Date updateDatetime;
+    private Date modified;
+    
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        Integer id = this.getId();
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
 
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "delete_flg")
-    @Getter
-    @Setter
-    private boolean deleteFlg;
+    @Override
+    public boolean equals(Object object) {
+
+        return true;
+    }
+
+
+
 }

@@ -7,12 +7,17 @@ package com.superscraping.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,11 +27,19 @@ import lombok.Setter;
  * @author Norio
  */
 @Entity
-@Table(name = "product")
-public class DmmProduct extends BaseProduct implements Serializable {
-    
+@Table(name = "items")
+public class DmmProduct extends BaseEntity implements Serializable {
+        
     private static final long serialVersionUID = 1L;
-   
+       
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "productName")
+    @Getter
+    @Setter
+    private String productName;
+    
     @Column(name = "releaseDate")
     @Temporal(TemporalType.TIMESTAMP)
     @Getter @Setter    
@@ -61,7 +74,7 @@ public class DmmProduct extends BaseProduct implements Serializable {
     @Lob
     @Size(max = 65535)
     @Column(name = "genre")
-    @Getter @Setter    
+    @Getter @Setter   
     private String genre;
     
     @Lob
@@ -69,7 +82,13 @@ public class DmmProduct extends BaseProduct implements Serializable {
     @Column(name = "summary")
     @Getter @Setter    
     private String summary;    
-    
+        
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "delete_flg")
+    @Getter
+    @Setter
+    private boolean deleteFlg;
     
     public DmmProduct() {
     }
@@ -77,7 +96,7 @@ public class DmmProduct extends BaseProduct implements Serializable {
     public DmmProduct(Integer id) {
         this.setId(id);
     }
-
+     
     @Override
     public int hashCode() {
         int hash = 0;
@@ -105,5 +124,5 @@ public class DmmProduct extends BaseProduct implements Serializable {
         Integer id = this.getId();
         return "com.superscraping.entity.Product[ id=" + id + " ]";
     }
-    
+   
 }

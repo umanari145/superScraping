@@ -5,6 +5,8 @@
  */
 package com.superscraping.app;
 
+import com.superscraping.app.link.DmmScraper;
+import com.superscraping.em.RegistController;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
@@ -27,26 +29,23 @@ public class Controller {
     @Setter
     private boolean testFlg = false;
 
-    @Inject
     private RegistImpl register;
 
 
-    @Inject
     private ScraperImpl scraper;
 
-    @Inject
     private ConfigManager configManager;
 
     public static void main(String[] args) {
         //Weldのコンテナを起動
-        Weld weld = new Weld();
-        WeldContainer container = weld.initialize();
-        Controller controller = container.instance().select(Controller.class).get();
+        Controller controller = new Controller();
         controller.start();
-        weld.shutdown();
     }
 
     public Controller() {   
+        scraper = new DmmScraper();
+        register = new RegistController();
+        configManager = new ConfigManager();
     }
 
     public void start() {
@@ -61,7 +60,6 @@ public class Controller {
     }
 
     public void action() {
-       
         //リンク一覧からコンテンツを取得
         List<Map<String, String>> contensMap = scraper.scarapingContents(siteUrl);
         //リンクを登録

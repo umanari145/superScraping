@@ -5,7 +5,7 @@
  */
 package com.superscraping.em.helper;
 
-import com.superscraping.entity.BaseProduct;
+import com.superscraping.entity.BaseEntity;
 import java.util.Map;
 
 /**
@@ -15,6 +15,6 @@ import java.util.Map;
 
 public interface MapEntityConverter {
 
-    public BaseProduct mapToEntity(Map<String, String> contentsMap);
+    public BaseEntity mapToEntity(Map<String, String> contentsMap);
         
 }
