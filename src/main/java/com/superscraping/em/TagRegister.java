@@ -53,7 +53,13 @@ public class TagRegister extends DBbase{
 
         Tags tagEntity = null;
         if (tagList.size() > 0) {
+            //リストから取得
             tagEntity = tagList.get(0);
+        }else{
+            //なければ保存
+            tagEntity = new Tags();
+            tagEntity.setTag(tag);
+            this.create(tagEntity);
         }
         return tagEntity;
     }
@@ -64,7 +70,7 @@ public class TagRegister extends DBbase{
      * @param productId 商品id
      * @param tagList タグのリスト
      */
-    void registRelateProductAndTag(Integer productId, List<Tags> tagList) {
+    public void registRelateProductAndTag(Integer productId, List<Tags> tagList) {
             tagList.stream().forEach(tag->{
                 ItemTags itemTags = new ItemTags();
                 itemTags.setItemId(productId);

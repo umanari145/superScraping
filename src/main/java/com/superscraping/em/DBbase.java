@@ -6,6 +6,7 @@
 package com.superscraping.em;
 
 import com.superscraping.entity.BaseEntity;
+import java.util.Date;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -29,19 +30,21 @@ public class DBbase {
     
     private EntityTransaction tx;
 
-    public DBbase() {
+    protected DBbase() {
         fac = Persistence.createEntityManagerFactory("com_SuperScraping_jar_1.0-SNAPSHOTPU");
         em = fac.createEntityManager();
         tx = em.getTransaction();
     }
 
-    public void create(BaseEntity baseEntity) {
+    protected void create(BaseEntity baseEntity) {
         tx.begin();
+        baseEntity.setCreated(new Date());
+        baseEntity.setModified(new Date());        
         em.persist(baseEntity);
         tx.commit();
     }
     
-    public BaseEntity find(BaseEntity baseEntity,Object id){
+    protected BaseEntity find(BaseEntity baseEntity,Object id){
         return em.find(BaseEntity.class, id);
     }
 }

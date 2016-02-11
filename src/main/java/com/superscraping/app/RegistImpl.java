@@ -5,6 +5,7 @@
  */
 package com.superscraping.app;
 
+import com.superscraping.entity.DmmProduct;
 import java.util.List;
 import java.util.Map;
 
@@ -20,4 +21,11 @@ public interface RegistImpl {
      * @param contentDetail List.Map形式の商品データ 
      */
     public void registContents(List<Map<String, String>> contentDetail);
+    
+    /**
+     * エンティティの取得
+     * 
+     * @return エンティティのリスト 
+     */
+    public List<DmmProduct> getEntity();
 }

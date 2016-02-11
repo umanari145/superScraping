@@ -7,13 +7,12 @@ package com.superscraping.app;
 
 import com.superscraping.app.link.DmmScraper;
 import com.superscraping.em.RegistController;
+import com.superscraping.entity.BaseEntity;
+import com.superscraping.entity.DmmProduct;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
 
 /**
  *
@@ -30,7 +29,6 @@ public class Controller {
     private boolean testFlg = false;
 
     private RegistImpl register;
-
 
     private ScraperImpl scraper;
 
@@ -52,13 +50,19 @@ public class Controller {
         //設定の初期化と読込
         init();
         //スタート
-        action();
+        action();     
+        //getEntity();
     }
 
     public void init() {
         this.siteUrl = configManager.SITE_URL;
     }
-
+    
+    public void getEntity(){
+        List<DmmProduct> DmmProduct = register.getEntity();
+        System.out.print("aaa");
+    }
+    
     public void action() {
         //リンク一覧からコンテンツを取得
         List<Map<String, String>> contensMap = scraper.scarapingContents(siteUrl);

@@ -36,7 +36,7 @@ public class RegistController implements RegistImpl {
         productRegister = new ProductRegister();
         tagRegister = new TagRegister();
     }
-    
+       
     @Override
     public void registContents(List<Map<String, String>> contentDetail) {
         
@@ -52,5 +52,10 @@ public class RegistController implements RegistImpl {
             
         });
     }  
+
+    @Override
+    public List<DmmProduct> getEntity() {
+        return productRegister.getAll();
+    }
     
 }

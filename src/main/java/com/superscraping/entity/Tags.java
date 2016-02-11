@@ -6,8 +6,12 @@
 package com.superscraping.entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import lombok.Getter;
@@ -26,5 +30,10 @@ public class Tags extends BaseEntity implements Serializable {
     @Getter 
     @Setter    
     private String tag;
+    
+    @ManyToMany
+    @JoinTable(name="item_tags", joinColumns = @JoinColumn( name = "tag_id"),
+            inverseJoinColumns = @JoinColumn(name="item_id"))
+    private List<DmmProduct> productList;
     
 }

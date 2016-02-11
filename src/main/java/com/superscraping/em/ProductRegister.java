@@ -5,10 +5,12 @@
  */
 package com.superscraping.em;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import com.superscraping.entity.BaseEntity;
 import com.superscraping.entity.DmmProduct;
 import com.superscraping.em.helper.MapEntityConverter;
 import com.superscraping.util.Utility;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +26,20 @@ public class ProductRegister extends DBbase implements MapEntityConverter{
 
     private EntityManager em;
     
+    /**
+     * 全アイテムの取得
+     * 
+     * @return DMMの商品リスト
+     */
     public List<DmmProduct> getAll() {
-        return em.createQuery(" SELECT p FROM Product p ", DmmProduct.class).getResultList();
+        this.em = this.getEm();
+        List<DmmProduct> productList = new ArrayList<DmmProduct>();
+        List<DmmProduct> tmpList = em.createQuery(" SELECT p FROM DmmProduct p WHERE p.deleteFlg = 0 ", DmmProduct.class)
+                                       .getResultList();
+        if( tmpList.size() > 0 ) {
+            productList = tmpList;
+        } 
+        return productList;
     }
 
     @Override
