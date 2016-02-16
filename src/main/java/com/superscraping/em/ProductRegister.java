@@ -42,6 +42,20 @@ public class ProductRegister extends DBbase implements MapEntityConverter{
         return productList;
     }
 
+    /**
+     * 同一品番の商品が存在するか否か
+     * 
+     * @param productCode 品番
+     * @return true(存在する) /false(存在しない)
+     */
+    public boolean isSameCodeProduct(String productCode ) {
+        this.em = this.getEm();
+        List<DmmProduct> tmpList = em.createQuery(" SELECT p FROM DmmProduct p WHERE p.deleteFlg = 0 and p.productCode = :productCode ", DmmProduct.class)
+                .setParameter("productCode", productCode)
+                .getResultList();
+        return  tmpList.size() > 0 ;
+    }
+    
     @Override
     public BaseEntity mapToEntity(Map<String, String> contentsMap) {
         DmmProduct product = new DmmProduct();
