@@ -7,7 +7,6 @@ package com.superscraping.app;
 
 import com.superscraping.app.link.DmmScraper;
 import com.superscraping.em.RegistController;
-import com.superscraping.entity.BaseEntity;
 import com.superscraping.entity.DmmProduct;
 import java.util.List;
 import java.util.Map;
