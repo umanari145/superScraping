@@ -9,6 +9,7 @@ import com.superscraping.app.RegistImpl;
 import com.superscraping.entity.BaseEntity;
 
 import com.superscraping.entity.DmmProduct;
+import com.superscraping.entity.Girls;
 import com.superscraping.entity.ItemTags;
 import com.superscraping.entity.Tags;
 import java.util.List;
@@ -30,11 +31,11 @@ public class RegistController implements RegistImpl {
 
     @Getter
     @Setter
-    private TagRegister tagRegister;
+    private ElementRegister elementRegister;
 
     public RegistController() {
         productRegister = new ProductRegister();
-        tagRegister = new TagRegister();
+        elementRegister = new ElementRegister();
     }
 
     @Override
@@ -51,9 +52,17 @@ public class RegistController implements RegistImpl {
                 //商品の保存
                 productRegister.create(product);
                 //タグリストへの変換
-                List<Tags> tagList = tagRegister.getTagData(product.getGenre());                
+                List<Tags> tagList = elementRegister.getTagData(product.getGenre());                
                 //タグの保存
-                tagRegister.registRelateProductAndTag(product.getId(), tagList);
+                if( tagList.size() >0 ){
+                    elementRegister.registRelateProductAndTag(product.getId(), tagList);
+                }                
+                //女優リストへの保存
+                 List<Girls> girlList = elementRegister.getGirlsData(product.getActress());
+                //女優データの保存
+                if( girlList.size() >0){
+                    elementRegister.registRelateProductAndGirl(product.getId(),girlList);                
+                }
             }
         });
     }

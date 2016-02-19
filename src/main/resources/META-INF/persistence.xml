@@ -5,6 +5,8 @@
     <class>com.superscraping.entity.DmmProduct</class>
     <class>com.superscraping.entity.Tags</class>
     <class>com.superscraping.entity.ItemTags</class>
+    <class>com.superscraping.entity.Girls</class>
+    <class>com.superscraping.entity.ItemGirls</class>
     <shared-cache-mode>ALL</shared-cache-mode>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/adultFactory?zeroDateTimeBehavior=convertToNull"/>
