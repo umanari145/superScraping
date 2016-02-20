@@ -10,11 +10,9 @@ import com.superscraping.entity.BaseEntity;
 
 import com.superscraping.entity.DmmProduct;
 import com.superscraping.entity.Girls;
-import com.superscraping.entity.ItemTags;
 import com.superscraping.entity.Tags;
 import java.util.List;
 import java.util.Map;
-import javax.ejb.Stateless;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,9 +20,8 @@ import lombok.Setter;
  *
  * @author Norio
  */
-@Stateless
 public class RegistController implements RegistImpl {
-
+   
     @Getter
     @Setter
     private ProductRegister productRegister;
@@ -49,11 +46,17 @@ public class RegistController implements RegistImpl {
             //同一品番のデータがすでに登録されていないかをチェックする
             if (product.getProductCode() != null && product.getProductCode().length() > 0
                     && productRegister.isSameCodeProduct(product.getProductCode()) == false) {
+                productRegister.startTransaction();
+                elementRegister.startTransaction();
+                
                 //商品の保存
                 productRegister.create(product);
+                productRegister.getFlush();
                 //タグリストへの変換
                 List<Tags> tagList = elementRegister.getTagData(product.getGenre());                
+                
                 //タグの保存
+
                 if( tagList.size() >0 ){
                     elementRegister.registRelateProductAndTag(product.getId(), tagList);
                 }                
@@ -63,6 +66,10 @@ public class RegistController implements RegistImpl {
                 if( girlList.size() >0){
                     elementRegister.registRelateProductAndGirl(product.getId(),girlList);                
                 }
+                //コミット
+                productRegister.transactionCommit();
+                elementRegister.transactionCommit();
+                
             }
         });
     }

@@ -35,7 +35,7 @@ public class DmmScraper implements ScraperImpl {
      * 総商品数
      */
     private Integer totalItemCount;
-    
+
     public DmmScraper() {
     }
 
@@ -47,10 +47,32 @@ public class DmmScraper implements ScraperImpl {
      */
     @Override
     public List<Map<String, String>> scarapingContents(String linkUrl) {
-        //リンクを集める  
-        List<String> contentsLink = this.getContentsFromHtml(linkUrl);
-        //コンテンツを集める
-        List<Map<String, String>> contentsList = this.getHtmlContents(contentsLink);
+        //(1ページ目)リンクを集める 
+        boolean hasTotalAmountGet;
+        hasTotalAmountGet = true;
+        List<String> contentsLink1 = this.getContentsFromHtml(linkUrl, hasTotalAmountGet);
+
+        //2ページ目のリンクを集める(総商品数を集める都合上1ページの処理と分ける必要性あり)
+        float loopCounttmp = totalItemCount / 120;
+        int loopCount = (int) Math.ceil(loopCounttmp);
+        List<String> contentsLink2 = new ArrayList<>();
+        if (loopCount >= 2) {
+            for (Integer i = 2; i <= loopCount; i++) {
+                String linkUrl2 = String.format("%s/page=%d/", linkUrl, i);
+                hasTotalAmountGet = false;
+                List<String> contentsLinktmp = this.getContentsFromHtml(linkUrl2, hasTotalAmountGet);
+                if (contentsLinktmp.size() > 0) {
+                    contentsLink2.addAll(contentsLinktmp);
+                }
+                if( ConfigManager.IS_CONTENTS_TEST == true && i <= ConfigManager.TEST_PAGE_COUNT){
+                    break;
+                }
+            }
+
+            contentsLink1.addAll(contentsLink2);
+        }
+        //リンクからコンテンツを集める
+        List<Map<String, String>> contentsList = this.getHtmlContents(contentsLink1);
 
         return contentsList;
     }
@@ -59,16 +81,20 @@ public class DmmScraper implements ScraperImpl {
      * 実際にHTMLをパースしてリンクを取得
      *
      * @param linkUrl トップのリンク
+     * @param hasTotalAmountGet 総商品数を取得するかいなか
      * @return リンク集
      */
-    private List<String> getContentsFromHtml(String linkUrl) {
+    private List<String> getContentsFromHtml(String linkUrl, boolean hasTotalAmountGet) {
         List<String> contentsLinkList = new ArrayList<>();
         try {
             Document document = Jsoup.connect(linkUrl).get();
             Elements eles = document.getElementsByAttributeValueMatching("href", Pattern.compile("^.*detail/=/cid.*$"));
             int testloopCnt = 0;
+
             //総商品数の取得
-            totalItemCount = getItemTotalCount( document );
+            if (hasTotalAmountGet == true) {
+                totalItemCount = getItemTotalCount(document);
+            }
 
             for (Iterator<Element> iterator = eles.iterator(); iterator.hasNext();) {
                 testloopCnt++;
@@ -77,7 +103,7 @@ public class DmmScraper implements ScraperImpl {
                 String link = contentsLinkAttr.get("href");
                 contentsLinkList.add(link);
 
-                if (ConfigManager.IS_CONTENTS_TEST && testloopCnt > ConfigManager.TEST_CONTENTS_COUNT ) {
+                if (ConfigManager.IS_SINGLE_CONTENTS_TEST && ConfigManager.TEST_CONTENTS_COUNT < testloopCnt ) {
                     break;
                 }
             }
@@ -91,26 +117,26 @@ public class DmmScraper implements ScraperImpl {
 
     /**
      * 総商品数の出力
-     * 
+     *
      * @param document ドキュメントオブジェクト
      * @return 総商品数
      */
-    private Integer getItemTotalCount(Document document){
-        Integer tmpTotalItemCount=0;
+    private Integer getItemTotalCount(Document document) {
+        Integer tmpTotalItemCount = 0;
         String totalItemCountElementString = document.select("div[class=list-boxcaptside list-boxpagenation] p").first().text();
-        
-        String regex ="(.*?)タイトル中.*?";
+
+        String regex = "(.*?)タイトル中.*?";
 
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(totalItemCountElementString);
-        
-        if( m.find()){
+
+        if (m.find()) {
             String totalItemCountStr = m.group(1);
-            tmpTotalItemCount = Integer.parseInt(totalItemCountStr);      
+            tmpTotalItemCount = Integer.parseInt(totalItemCountStr);
         }
         return tmpTotalItemCount;
     }
-    
+
     /**
      * 商品リンクからフィールド→値形式のMapのコンテンツデータを取得
      *
@@ -121,7 +147,7 @@ public class DmmScraper implements ScraperImpl {
 
         List<Map<String, String>> contentsList = new ArrayList<>();
         for (String link : contentsLink) {
-            Map<String, String> contentsDetailMap= getSingleContentsDetail(link);
+            Map<String, String> contentsDetailMap = getSingleContentsDetail(link);
             contentsList.add(contentsDetailMap);
         }
         return contentsList;
@@ -133,8 +159,8 @@ public class DmmScraper implements ScraperImpl {
      * @param contentsUrl　単一商品のURL
      * @return 商品データのMap
      */
-    private Map<String,String> getSingleContentsDetail(String contentsUrl) {
-        Map<String,String> contentsDetailMap = new HashMap<>();
+    private Map<String, String> getSingleContentsDetail(String contentsUrl) {
+        Map<String, String> contentsDetailMap = new HashMap<>();
         try {
             URL url = new URL(contentsUrl);
             Document doc = Jsoup.parse(url, 3000);
@@ -150,12 +176,12 @@ public class DmmScraper implements ScraperImpl {
 
     /**
      * 商品データをマップ形式に変換する
-     * 
-     * @param contentsMap  key=>value型のマップデータ
+     *
+     * @param contentsMap key=>value型のマップデータ
      * @param contentsDetail 商品詳細データ
      * @return フィールド→値形式のMap
      */
-    private Map<String, String> convertContentsDetail(Map<String,String> contentsHashMap, String contentsDetail) {
+    private Map<String, String> convertContentsDetail(Map<String, String> contentsHashMap, String contentsDetail) {
         contentsDetail = contentsDetail.replaceAll("：\n", ":");
         String[] contentsColumn = contentsDetail.split("\n");
 
@@ -168,36 +194,35 @@ public class DmmScraper implements ScraperImpl {
 
     /**
      * Docオブジェクトからそれぞれテキストデータを取り出す
-     * 
+     *
      * @param doc 商品のdocオブジェクト
      * @return 単品諸品データのMap
      */
-    private Map<String,String> getSingcleContentsMap(Document doc) {
-        
-        Map<String,String> contentsHashMap = new HashMap<>();
+    private Map<String, String> getSingcleContentsMap(Document doc) {
+
+        Map<String, String> contentsHashMap = new HashMap<>();
         //商品title
         String titleStr = getTitile(doc);
         contentsHashMap.put("productName", titleStr);
 
         //要約
         String summaryStr = getSummary(doc);
-        contentsHashMap.put("summary",summaryStr);
+        contentsHashMap.put("summary", summaryStr);
 
         //拡大画像
         String pictureStr = getPicture(doc);
-        contentsHashMap.put("pictureUrl",pictureStr);
-        
+        contentsHashMap.put("pictureUrl", pictureStr);
+
         //テーブル系のデータ
         StringBuilder tableStr = getContentsFromTableTag(doc);
         convertContentsDetail(contentsHashMap, tableStr.toString());
-
 
         return contentsHashMap;
     }
 
     /**
      * 商品名の取得
-     * 
+     *
      * @param doc docオブジェクト
      * @return 商品名の取得
      */
@@ -208,7 +233,7 @@ public class DmmScraper implements ScraperImpl {
 
     /**
      * 商品要約情報の取得
-     * 
+     *
      * @param doc　docオブジェクト
      * @return 商品要約
      */
@@ -219,7 +244,7 @@ public class DmmScraper implements ScraperImpl {
 
     /**
      * table形式データの取得
-     * 
+     *
      * @param doc docオブジェクト
      * @return それぞれのデータを文字列にて取得
      */
@@ -229,19 +254,19 @@ public class DmmScraper implements ScraperImpl {
         Elements elTd = table.select("td");
         for (Element el : elTd) {
             tableStr.append(el.text()).append("\n");
-        }     
+        }
         return tableStr;
     }
 
     /**
      * 商品画像を取得
-     * 
+     *
      * @param doc ドキュメントオブジェクト
      * @return 拡大画像のURL
      */
     private String getPicture(Document doc) {
         StringBuilder pictureStr = new StringBuilder();
-        Elements pictureElement =  doc.select("[name=package-image]");
+        Elements pictureElement = doc.select("[name=package-image]");
         String pictureUrl = pictureElement.get(1).attr("href");
         return pictureUrl;
     }

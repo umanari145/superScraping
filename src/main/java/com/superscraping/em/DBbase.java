@@ -19,7 +19,6 @@ import lombok.Setter;
  *
  * @author Norio
  */
-@Stateless
 public class DBbase {
     
     private EntityManagerFactory fac;
@@ -36,11 +35,21 @@ public class DBbase {
         tx = em.getTransaction();
     }
 
+    protected void startTransaction(){
+        tx.begin();        
+    }
+    
+    protected void getFlush(){
+        em.flush();
+    }
+    
     protected void create(BaseEntity baseEntity) {
-        tx.begin();
         baseEntity.setCreated(new Date());
         baseEntity.setModified(new Date());        
         em.persist(baseEntity);
+    }
+    
+    protected void transactionCommit(){
         tx.commit();
     }
     

@@ -37,27 +37,5 @@ public class ItemTags extends BaseEntity implements Serializable {
     @Setter
     private int tagId;
 
-    public ItemTags() {
-    }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        Integer id = this.getId();
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-
-        return true;
-    }
-
-    @Override
-    public String toString() {
-       Integer id = this.getId();
-        return "com.superscraping.entity.ItemTags[ id=" + id + " ]";
-    }
-    
 }

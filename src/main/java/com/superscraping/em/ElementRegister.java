@@ -5,7 +5,6 @@
  */
 package com.superscraping.em;
 
-import com.superscraping.entity.BaseEntity;
 import com.superscraping.entity.Girls;
 import com.superscraping.entity.ItemGirls;
 import com.superscraping.entity.ItemTags;
@@ -13,14 +12,12 @@ import com.superscraping.entity.Tags;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 
 /**
  *
  * @author Norio
  */
-@Stateless
 public class ElementRegister extends DBbase {
 
     private EntityManager em;
@@ -91,6 +88,7 @@ public class ElementRegister extends DBbase {
             tagEntity = new Tags();
             tagEntity.setTag(tag);
             this.create(tagEntity);
+            this.getFlush();
         }
         return tagEntity;
     }
@@ -116,6 +114,7 @@ public class ElementRegister extends DBbase {
             girlEntity = new Girls();
             girlEntity.setName(girl);
             this.create(girlEntity);
+            this.getFlush();
         }
         return girlEntity;
     }    

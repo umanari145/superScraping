@@ -44,20 +44,4 @@ public abstract class BaseEntity {
     @Setter
     private Date modified;
     
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        Integer id = this.getId();
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-
-        return true;
-    }
-
-
-
 }

@@ -11,11 +11,29 @@ package com.superscraping.app;
  */
 public class ConfigManager {
     
-    public static boolean IS_CONTENTS_TEST = true;
+    /**
+     * 単一一覧ページのテストフラグ
+     */
+    public static final boolean IS_SINGLE_CONTENTS_TEST = false;
+
+    /**
+     * 単一一覧ページのテストリンク数
+     */
+    public static final int TEST_CONTENTS_COUNT=10; 
+           
+    /**
+     * 全体ページのテストフラグ
+     */
+    public static final boolean IS_CONTENTS_TEST = true;
+    
+    /**
+     * 全体ページのテストページ数
+     */
+    public static final int TEST_PAGE_COUNT = 4;
+
     
     public static final String SITE_URL="http://www.dmm.co.jp/digital/videoa/-/list/=/article=keyword/id=1018/limit=120/sort=ranking/"; 
     
-    public static final int TEST_CONTENTS_COUNT=100; 
-       
+
     public ConfigManager(){}
 }
