@@ -29,9 +29,11 @@ public class ConfigManager {
     /**
      * 全体ページのテストページ数
      */
-    public static final int TEST_PAGE_COUNT = 4;
+    public static final int TEST_PAGE_COUNT = 10;
 
-    
+    /**
+     * スタートのURL
+     */
     public static final String SITE_URL="http://www.dmm.co.jp/digital/videoa/-/list/=/article=keyword/id=1018/limit=120/sort=ranking/"; 
     
 

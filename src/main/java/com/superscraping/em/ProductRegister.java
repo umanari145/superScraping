@@ -78,6 +78,9 @@ public class ProductRegister extends DBbase implements MapEntityConverter{
                 case "メーカー":
                     product.setMaker(value);
                     break;
+                case "productUrl":
+                    product.setProductUrl(value);
+                    break;
                 case "productName":
                     product.setProductName(value);
                     break;

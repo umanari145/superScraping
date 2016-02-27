@@ -64,11 +64,10 @@ public class DmmScraper implements ScraperImpl {
                 if (contentsLinktmp.size() > 0) {
                     contentsLink2.addAll(contentsLinktmp);
                 }
-                if( ConfigManager.IS_CONTENTS_TEST == true && i <= ConfigManager.TEST_PAGE_COUNT){
+                if( ConfigManager.IS_CONTENTS_TEST == true && ConfigManager.TEST_PAGE_COUNT <= i){
                     break;
                 }
             }
-
             contentsLink1.addAll(contentsLink2);
         }
         //リンクからコンテンツを集める
@@ -132,6 +131,7 @@ public class DmmScraper implements ScraperImpl {
 
         if (m.find()) {
             String totalItemCountStr = m.group(1);
+            totalItemCountStr = totalItemCountStr.replaceAll(",", "");
             tmpTotalItemCount = Integer.parseInt(totalItemCountStr);
         }
         return tmpTotalItemCount;
@@ -165,6 +165,7 @@ public class DmmScraper implements ScraperImpl {
             URL url = new URL(contentsUrl);
             Document doc = Jsoup.parse(url, 3000);
             contentsDetailMap = getSingcleContentsMap(doc);
+            contentsDetailMap.put("productUrl",contentsUrl);
 
         } catch (MalformedURLException ex) {
             Logger.getLogger(DmmScraper.class.getName()).log(Level.SEVERE, null, ex);
@@ -267,7 +268,10 @@ public class DmmScraper implements ScraperImpl {
     private String getPicture(Document doc) {
         StringBuilder pictureStr = new StringBuilder();
         Elements pictureElement = doc.select("[name=package-image]");
-        String pictureUrl = pictureElement.get(1).attr("href");
+        String pictureUrl ="";
+        if( pictureElement.size() > 0 ) {
+            pictureUrl = pictureElement.get(1).attr("href");
+        }
         return pictureUrl;
     }
 

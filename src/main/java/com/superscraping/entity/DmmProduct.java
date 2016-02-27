@@ -39,6 +39,14 @@ public class DmmProduct extends BaseEntity implements Serializable {
     @Setter
     private String productName;
     
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "productUrl")
+    @Getter
+    @Setter
+    private String productUrl;
+    
     @Column(name = "releaseDate")
     @Temporal(TemporalType.TIMESTAMP)
     @Getter @Setter    

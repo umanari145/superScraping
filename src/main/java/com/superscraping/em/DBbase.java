@@ -7,7 +7,6 @@ package com.superscraping.em;
 
 import com.superscraping.entity.BaseEntity;
 import java.util.Date;
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
