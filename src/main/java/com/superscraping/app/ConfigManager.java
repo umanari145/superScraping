@@ -29,7 +29,7 @@ public class ConfigManager {
     /**
      * 全体ページのテストページ数
      */
-    public static final int TEST_PAGE_COUNT = 10;
+    public static final int TEST_PAGE_COUNT = 6;
 
     /**
      * スタートのURL

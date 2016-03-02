@@ -36,6 +36,11 @@ public class DmmScraper implements ScraperImpl {
      */
     private Integer totalItemCount;
 
+    /**
+     * 進捗を表すために現在何商品を獲得しているかの値
+     */
+    private Integer proceed = 0;
+
     public DmmScraper() {
     }
 
@@ -64,7 +69,7 @@ public class DmmScraper implements ScraperImpl {
                 if (contentsLinktmp.size() > 0) {
                     contentsLink2.addAll(contentsLinktmp);
                 }
-                if( ConfigManager.IS_CONTENTS_TEST == true && ConfigManager.TEST_PAGE_COUNT <= i){
+                if (ConfigManager.IS_CONTENTS_TEST == true && ConfigManager.TEST_PAGE_COUNT <= i) {
                     break;
                 }
             }
@@ -102,7 +107,7 @@ public class DmmScraper implements ScraperImpl {
                 String link = contentsLinkAttr.get("href");
                 contentsLinkList.add(link);
 
-                if (ConfigManager.IS_SINGLE_CONTENTS_TEST && ConfigManager.TEST_CONTENTS_COUNT < testloopCnt ) {
+                if (ConfigManager.IS_SINGLE_CONTENTS_TEST && ConfigManager.TEST_CONTENTS_COUNT < testloopCnt) {
                     break;
                 }
             }
@@ -165,7 +170,7 @@ public class DmmScraper implements ScraperImpl {
             URL url = new URL(contentsUrl);
             Document doc = Jsoup.parse(url, 3000);
             contentsDetailMap = getSingcleContentsMap(doc);
-            contentsDetailMap.put("productUrl",contentsUrl);
+            contentsDetailMap.put("productUrl", contentsUrl);
 
         } catch (MalformedURLException ex) {
             Logger.getLogger(DmmScraper.class.getName()).log(Level.SEVERE, null, ex);
@@ -205,6 +210,11 @@ public class DmmScraper implements ScraperImpl {
         //商品title
         String titleStr = getTitile(doc);
         contentsHashMap.put("productName", titleStr);
+
+        proceed++;
+        float percent = proceed / totalItemCount * 100;
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, " total{0} , get{1}, process {2} %", new Object[]{totalItemCount, proceed, percent});
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, " title {0} ", titleStr);
 
         //要約
         String summaryStr = getSummary(doc);
@@ -268,8 +278,8 @@ public class DmmScraper implements ScraperImpl {
     private String getPicture(Document doc) {
         StringBuilder pictureStr = new StringBuilder();
         Elements pictureElement = doc.select("[name=package-image]");
-        String pictureUrl ="";
-        if( pictureElement.size() > 0 ) {
+        String pictureUrl = "";
+        if (pictureElement.size() > 0) {
             pictureUrl = pictureElement.get(1).attr("href");
         }
         return pictureUrl;

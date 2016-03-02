@@ -55,7 +55,7 @@ public class ElementRegister extends DBbase {
     public List<Girls> getGirlsData(String girlStr) {
         List<Girls> girlList = new ArrayList<>();
 
-        if( girlStr.equals("----")){
+        if( girlStr.equals("----") || girlStr.equals("▼すべて表示する") ){
             return girlList;
         }
         
