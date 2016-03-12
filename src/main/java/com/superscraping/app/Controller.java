@@ -5,7 +5,9 @@
  */
 package com.superscraping.app;
 
+import com.superscraping.app.link.ActressScraper;
 import com.superscraping.app.link.DmmScraper;
+import com.superscraping.em.ActressRegister;
 import com.superscraping.em.RegistController;
 import com.superscraping.entity.DmmProduct;
 import java.util.List;
@@ -27,9 +29,13 @@ public class Controller {
     @Setter
     private boolean testFlg = false;
 
-    private RegistImpl register;
+    private RegistImpl itemRegister;
 
-    private ScraperImpl scraper;
+    private RegistImpl actressRegister;
+
+    private ScraperImpl dmmScraper;
+
+    private ScraperImpl actressScraper;
 
     private ConfigManager configManager;
 
@@ -40,8 +46,12 @@ public class Controller {
     }
 
     public Controller() {   
-        scraper = new DmmScraper();
-        register = new RegistController();
+        actressScraper = new ActressScraper();
+        dmmScraper = new DmmScraper();
+        
+        itemRegister = new RegistController();
+        actressRegister = new ActressRegister();
+        
         configManager = new ConfigManager();
     }
 
@@ -49,24 +59,33 @@ public class Controller {
         //設定の初期化と読込
         init();
         //スタート
-        action();     
+        //itemAction();
+        actressAction();
+        
         //getEntity();
     }
 
     public void init() {
-        this.siteUrl = configManager.SITE_URL;
+        this.siteUrl = configManager.ACTRESS_SITE_URL;
     }
     
     public void getEntity(){
-        List<DmmProduct> DmmProduct = register.getEntity();
+        List<DmmProduct> DmmProduct = itemRegister.getEntity();
         System.out.print("aaa");
     }
     
-    public void action() {
+    public void itemAction() {
         //リンク一覧からコンテンツを取得
-        List<Map<String, String>> contensMap = scraper.scarapingContents(siteUrl);
+        List<Map<String, String>> contensMap = dmmScraper.scarapingContents(siteUrl);
         //リンクを登録
-        register.registContents(contensMap);
+       itemRegister.registContents(contensMap);
     }
 
+    public void actressAction() {
+        //リンク一覧からコンテンツを取得
+        List<Map<String, String>> contensMap = actressScraper.scarapingContents(siteUrl);
+        //リンクを登録
+       actressRegister.registContents(contensMap);
+    }
+    
 }

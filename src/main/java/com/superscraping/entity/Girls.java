@@ -21,12 +21,22 @@ import lombok.Setter;
 @Table(name = "girls")
 public class Girls extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;    
-   
+    
+    @Size(max = 255)
+    @Column(name = "initial")
+    @Getter
+    @Setter
+    private String initial; 
+    
     @Size(max = 255)
     @Column(name = "name")
     @Getter
     @Setter
     private String name;   
 
+    @Column(name = "initial_order")
+    @Getter
+    @Setter
+    private Integer initialOrder;
     
 }

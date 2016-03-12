@@ -92,6 +92,15 @@ public class ElementRegister extends DBbase {
         }
         return tagEntity;
     }
+    
+    /**
+     * 女優データの保存
+     * 
+     * @param girl Girlオブジェクト 
+     */
+    public void registGirl(Girls girl){
+        this.create(girl);
+    }
 
     /**
      * 女優エンティティの取得

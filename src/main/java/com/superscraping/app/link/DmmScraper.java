@@ -212,8 +212,7 @@ public class DmmScraper implements ScraperImpl {
         contentsHashMap.put("productName", titleStr);
 
         proceed++;
-        float percent = proceed / totalItemCount * 100;
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, " total{0} , get{1}, process {2} %", new Object[]{totalItemCount, proceed, percent});
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, " total{0} , get{1}", new Object[]{totalItemCount, proceed});
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, " title {0} ", titleStr);
 
         //要約

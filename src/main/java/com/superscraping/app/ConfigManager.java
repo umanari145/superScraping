@@ -29,13 +29,23 @@ public class ConfigManager {
     /**
      * 全体ページのテストページ数
      */
-    public static final int TEST_PAGE_COUNT = 6;
+    public static final int TEST_PAGE_COUNT = 30;
 
     /**
      * スタートのURL
      */
     public static final String SITE_URL="http://www.dmm.co.jp/digital/videoa/-/list/=/article=keyword/id=1018/limit=120/sort=ranking/"; 
     
-
+    /**
+     * 女優リストのURL
+     */
+    public static final String ACTRESS_SITE_URL="http://www.dmm.co.jp/rental/-/actress/=/"; 
+ 
+    /**
+     * 女優ページのテストフラグ
+     */
+    public static final boolean IS_ACTRESS_CONTENTS_TEST = false;
+    
+    
     public ConfigManager(){}
 }
