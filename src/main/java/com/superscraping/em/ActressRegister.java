@@ -33,10 +33,13 @@ public class ActressRegister implements RegistImpl {
 
         contentDetail.stream().forEach(contents->{
                 Girls girl = new Girls();
-                girl.setInitial(contents.get("initial"));
-                girl.setName(contents.get("name"));
-                girl.setInitialOrder(Integer.parseInt(contents.get("initial_order")));
-                elementRegister.registGirl(girl);
+                if( contents.get("dmm_girls_id") != null && contents.get("dmm_girls_id").length() >0 ) {
+                    girl.setDmmGirlId(Integer.parseInt(contents.get("dmm_girls_id")));
+                    girl.setInitial(contents.get("initial"));
+                    girl.setName(contents.get("name"));
+                    girl.setInitialOrder(Integer.parseInt(contents.get("initial_order")));
+                    elementRegister.registGirl(girl);
+                }
         });
         elementRegister.transactionCommit();
         

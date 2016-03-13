@@ -39,12 +39,12 @@ public class ConfigManager {
     /**
      * 女優リストのURL
      */
-    public static final String ACTRESS_SITE_URL="http://www.dmm.co.jp/rental/-/actress/=/"; 
+    public static final String ACTRESS_SITE_URL="http://www.dmm.co.jp/digital/videoa/-/actress/=/"; 
  
     /**
      * 女優ページのテストフラグ
      */
-    public static final boolean IS_ACTRESS_CONTENTS_TEST = false;
+    public static final boolean IS_ACTRESS_CONTENTS_TEST = true;
     
     
     public ConfigManager(){}

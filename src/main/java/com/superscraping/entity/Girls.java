@@ -21,7 +21,12 @@ import lombok.Setter;
 @Table(name = "girls")
 public class Girls extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;    
-    
+       
+    @Column(name = "dmm_girl_id")
+    @Getter
+    @Setter
+    private Integer dmmGirlId;
+        
     @Size(max = 255)
     @Column(name = "initial")
     @Getter
