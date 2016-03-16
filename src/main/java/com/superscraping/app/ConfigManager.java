@@ -14,12 +14,12 @@ public class ConfigManager {
     /**
      * 単一一覧ページのテストフラグ
      */
-    public static final boolean IS_SINGLE_CONTENTS_TEST = false;
+    public static final boolean IS_SINGLE_CONTENTS_TEST = true;
 
     /**
      * 単一一覧ページのテストリンク数
      */
-    public static final int TEST_CONTENTS_COUNT=10; 
+    public static final int TEST_CONTENTS_COUNT=2; 
            
     /**
      * 全体ページのテストフラグ
@@ -29,7 +29,7 @@ public class ConfigManager {
     /**
      * 全体ページのテストページ数
      */
-    public static final int TEST_PAGE_COUNT = 30;
+    public static final int TEST_PAGE_COUNT = 3;
 
     /**
      * スタートのURL
@@ -44,7 +44,7 @@ public class ConfigManager {
     /**
      * 女優ページのテストフラグ
      */
-    public static final boolean IS_ACTRESS_CONTENTS_TEST = true;
+    public static final boolean IS_ACTRESS_CONTENTS_TEST = false;
     
     
     public ConfigManager(){}

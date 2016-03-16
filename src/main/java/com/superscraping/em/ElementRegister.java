@@ -49,20 +49,21 @@ public class ElementRegister extends DBbase {
     /**
      * 女優データからデータベースのidを取得する
      *
-     * @param girlStr
+     * @param girlIdList
      * @return girlリスト
      */
-    public List<Girls> getGirlsData(String girlStr) {
+    public List<Girls> getGirlsData(List<String> girlIdList) {
         List<Girls> girlList = new ArrayList<>();
 
-        if( girlStr.equals("----") || girlStr.equals("▼すべて表示する") ){
+        if( girlIdList.isEmpty() ){
             return girlList;
         }
-        
-        String[] girlsArr = girlStr.split(" ");
-        for (String girl : girlsArr) {
-            Girls girlsEntity = this.findGirlClass(girl);            
-            girlList.add(girlsEntity);
+      
+        for (String girlId : girlIdList) {
+            Girls girlsEntity = this.findGirlClass(girlId); 
+            if( girlsEntity != null){
+                girlList.add(girlsEntity);
+            }
         }
         return girlList;
     }    
@@ -105,26 +106,20 @@ public class ElementRegister extends DBbase {
     /**
      * 女優エンティティの取得
      *
-     * @param girl 女優文字列
+     * @param girlId 女優Id
      * @return 女優エンティティ
      */
-    private Girls findGirlClass(String girl) {
+    private Girls findGirlClass(String girlId) {
         EntityManager em = this.getEm();
-        List<Girls> girlList = em.createQuery(" SELECT g FROM Girls g WHERE g.name = :girls ", Girls.class)
-                .setParameter("girls", girl)
+        List<Girls> girlList = em.createQuery(" SELECT g FROM Girls g WHERE g.dmmGirlId = :girlId ", Girls.class)
+                .setParameter("girlId", Integer.parseInt(girlId))
                 .getResultList();
 
         Girls girlEntity = null;
         if (girlList.size() > 0) {
             //リストから取得
             girlEntity = girlList.get(0);
-        } else {
-            //なければ保存
-            girlEntity = new Girls();
-            girlEntity.setName(girl);
-            this.create(girlEntity);
-            this.getFlush();
-        }
+        } 
         return girlEntity;
     }    
     

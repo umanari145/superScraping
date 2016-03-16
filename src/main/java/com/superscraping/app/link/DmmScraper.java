@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
@@ -222,7 +223,13 @@ public class DmmScraper implements ScraperImpl {
         //拡大画像
         String pictureStr = getPicture(doc);
         contentsHashMap.put("pictureUrl", pictureStr);
-
+        
+        //女優Idリスト
+        String actressIdCsv = getActressIdFromContents(doc); 
+        if( actressIdCsv != null ){
+            contentsHashMap.put("actressId",actressIdCsv);
+        }
+        
         //テーブル系のデータ
         StringBuilder tableStr = getContentsFromTableTag(doc);
         convertContentsDetail(contentsHashMap, tableStr.toString());
@@ -268,6 +275,39 @@ public class DmmScraper implements ScraperImpl {
         return tableStr;
     }
 
+    /**
+     * 女優idを取得する
+     * 
+     * @param doc 要素
+     * @return 女優Idを_でつなぐ
+     */
+    private String getActressIdFromContents(Document doc){
+        Element el2 = doc.getElementById("performer");
+        String actressIdCsv = null;
+        if( el2 != null){        
+            
+            Elements els = el2.getElementsByTag("a");
+            List<String> actressIdList = new ArrayList<>();
+            for(Element el3: els){
+                String tmp = el3.getElementsByTag("a").first().attr("href");
+                String regex = "id=(\\d*)";
+                Pattern p = Pattern.compile(regex);
+                Matcher m = p.matcher(tmp);
+                //リンクデータを取得する
+                if (m.find() && m.group(1) != null) {
+                    String actressId = null;
+                    actressId = m.group(1);
+                    actressIdList.add(actressId);
+                }
+            }
+            
+            if( actressIdList.size() >0 ) {
+                actressIdCsv = actressIdList.stream().collect(Collectors.joining("_"));
+            }
+        }
+        return actressIdCsv;
+    }
+    
     /**
      * 商品画像を取得
      *

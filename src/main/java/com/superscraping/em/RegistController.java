@@ -61,10 +61,12 @@ public class RegistController implements RegistImpl {
                     elementRegister.registRelateProductAndTag(product.getId(), tagList);
                 }                
                 //女優リストへの保存
-                 List<Girls> girlList = elementRegister.getGirlsData(product.getActress());
-                //女優データの保存
-                if( girlList.size() >0){
-                    elementRegister.registRelateProductAndGirl(product.getId(),girlList);                
+                if( product.getActressIdList() != null && !product.getActressIdList().isEmpty()){
+                    List<Girls> girlList = elementRegister.getGirlsData(product.getActressIdList());
+                    //女優データの保存
+                    if( girlList.size() >0){
+                        elementRegister.registRelateProductAndGirl(product.getId(),girlList);                
+                    }
                 }
                 //コミット
                 productRegister.transactionCommit();

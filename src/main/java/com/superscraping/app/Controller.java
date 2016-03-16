@@ -59,14 +59,15 @@ public class Controller {
         //設定の初期化と読込
         init();
         //スタート
-        //itemAction();
-        actressAction();
+        itemAction();
+        //actressAction();
         
         //getEntity();
     }
 
     public void init() {
-        this.siteUrl = configManager.ACTRESS_SITE_URL;
+        this.siteUrl = configManager.SITE_URL;
+ //       this.siteUrl = configManager.ACTRESS_SITE_URL;
     }
     
     public void getEntity(){

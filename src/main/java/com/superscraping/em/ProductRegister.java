@@ -5,12 +5,12 @@
  */
 package com.superscraping.em;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import com.superscraping.entity.BaseEntity;
 import com.superscraping.entity.DmmProduct;
 import com.superscraping.em.helper.MapEntityConverter;
 import com.superscraping.util.Utility;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -94,6 +94,10 @@ public class ProductRegister extends DBbase implements MapEntityConverter{
                     break;
                 case "pictureUrl":
                     product.setPictureUrl(value);
+                    break;
+                case "actressId":
+                    String[] tmpList = value.split("_");
+                    product.setActressIdList(Arrays.asList(tmpList));
                     break;
             }
         });

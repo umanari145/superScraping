@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Getter;
@@ -57,6 +58,11 @@ public class DmmProduct extends BaseEntity implements Serializable {
     @Column(name = "actress")
     @Getter @Setter    
     private String actress;
+    
+    @Getter
+    @Setter
+    @Transient
+    private List<String> actressIdList;
     
     @Size(max = 255)
     @Column(name = "pictureUrl")
