@@ -8,6 +8,8 @@ package com.superscraping.app.service;
 import com.superscraping.app.ConfigManager;
 import com.superscraping.app.ScraperImpl;
 import com.superscraping.entity.DmmItem;
+import com.superscraping.entity.Girl;
+import com.superscraping.entity.Girls;
 import com.superscraping.entity.ItemLink;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -34,6 +36,16 @@ import org.jsoup.select.Elements;
  */
 public class DmmItemService implements ScraperImpl {
 
+    /**
+     * DMMページのテーブル要素のindex メーカーのindex
+     */
+    public static final int makerTableIndex = 15;
+
+    /**
+     * DMMページのテーブル要素のindex ラベルのindex
+     */
+    public static final int labelTableIndex = 17;
+    
     /**
      * 進捗を表すために現在何商品を獲得しているかの値
      */
@@ -70,30 +82,7 @@ public class DmmItemService implements ScraperImpl {
         return dmmItem;
     } 
     
-    /**
-     * 商品データをマップ形式に変換する
-     *
-     * @param contentsMap key=>value型のマップデータ
-     * @param contentsDetail 商品詳細データ
-     * @return フィールド→値形式のMap
-     */
-    private Map<String, String> convertContentsDetail(Map<String, String> contentsHashMap, String contentsDetail) {
-        contentsDetail = contentsDetail.replaceAll("：\n", ":");
-        String[] contentsColumn = contentsDetail.split("\n");
-
-        for (String singleContentsColumn : contentsColumn) {
-            String[] contentsDetailData = singleContentsColumn.split(":");
-
-            try {
-                contentsHashMap.put(contentsDetailData[0], contentsDetailData[1]);
-            } catch (ArrayIndexOutOfBoundsException e) {
-                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, " error {0} ", e.getMessage());
-            }
-        }
-        return contentsHashMap;
-    }
-
-        /**
+            /**
      * Docオブジェクトからそれぞれテキストデータを取り出す
      *
      * @param doc 商品のdocオブジェクト
@@ -114,17 +103,12 @@ public class DmmItemService implements ScraperImpl {
         dmmItem.setSummary(getSummary(doc));
         //拡大画像
         dmmItem.setPictureUrl(getPicture(doc));
-
         //女優Idリスト
-        // String actressIdCsv = getActressIdFromContents(doc);
-        // if (actressIdCsv != null) {
-        //      contentsHashMap.put("actressId", actressIdCsv);
-        //}
-
+        dmmItem.setGirls(getGirls(doc));     
         //テーブル系のデータ
-        //StringBuilder tableStr = getContentsFromTableTag(doc);
-        //convertContentsDetail(contentsHashMap, tableStr.toString());
-
+        Elements elTd = getTableElements(doc);
+        dmmItem.setMaker(getDmmElementFromTd(elTd, makerTableIndex));
+        dmmItem.setLabel(getDmmElementFromTd(elTd, labelTableIndex));
         return dmmItem;
     }
 
@@ -151,53 +135,75 @@ public class DmmItemService implements ScraperImpl {
     }
 
     /**
-     * table形式データの取得
+     * table形式データの取得(HTMLで判別することが不可能)
      *
      * @param doc docオブジェクト
-     * @return それぞれのデータを文字列にて取得
+     * @return テーブルElement
      */
-    private StringBuilder getContentsFromTableTag(Document doc) {
+    private Elements getTableElements(Document doc) {
         StringBuilder tableStr = new StringBuilder();
-        Element table = doc.select("table[class=mg-b20]").first();
-        Elements elTd = table.select("td");
-        for (Element el : elTd) {
-            tableStr.append(el.text()).append("\n");
+        Elements elTd = doc.select("table[class=mg-b20]").first().select("td");
+        
+        //デバッグ用
+        for (int i = 0; i < elTd.size(); i++) {
+            System.out.println(i + " " + elTd.get(i).text());
         }
-        return tableStr;
+
+        return elTd;
+    }
+    
+    /**
+     * テーブル要素からテキストデータを抽出
+     * 
+     * @param elTd テーブル要素
+     * @param i インデックス
+     * @return itemの要素
+     */
+    private String getDmmElementFromTd(Elements elTd, int i){
+        return elTd.get(i).text();
     }
 
-    /**
+
+        /**
      * 女優idを取得する
      *
      * @param doc 要素
      * @return 女優Idを_でつなぐ
      */
-    private String getActressIdFromContents(Document doc) {
-        Element el2 = doc.getElementById("performer");
+    private Girls getGirls(Document doc) {
+        Elements girlsLinks = doc.getElementById("performer").getElementsByTag("a");
         String actressIdCsv = null;
-        if (el2 != null) {
-
-            Elements els = el2.getElementsByTag("a");
-            List<String> actressIdList = new ArrayList<>();
-            for (Element el3 : els) {
-                String tmp = el3.getElementsByTag("a").first().attr("href");
-                String regex = "id=(\\d*)";
-                Pattern p = Pattern.compile(regex);
-                Matcher m = p.matcher(tmp);
-                //リンクデータを取得する
-                if (m.find() && m.group(1) != null) {
-                    String actressId = null;
-                    actressId = m.group(1);
-                    actressIdList.add(actressId);
-                }
-            }
-
-            if (actressIdList.size() > 0) {
-                actressIdCsv = actressIdList.stream().collect(Collectors.joining("_"));
+        List<String> actressIdList = new ArrayList<>();
+        Girls girls = new Girls();
+        
+        for (Element girlLink : girlsLinks) {
+            Integer girlId = getGirlIdFromGirlLink(girlLink);
+            if (girlId != null ) {
+                Girl girl = new Girl(girlId);
+                girls.addGirls(girl);
             }
         }
-        return actressIdCsv;
+        return girls;
     }
+
+    /**
+     * 女優のLinkオブジェクトからidを抽出
+     * 
+     * @param girlLink リンクオブジェクト
+     * @return 女優id 
+     */
+    public Integer getGirlIdFromGirlLink(Element girlLink) {       
+
+        Integer girlId = null;
+        Pattern p = Pattern.compile("id=(\\d*)");
+        Matcher m = p.matcher(girlLink.getElementsByTag("a").first().attr("href"));
+
+        if (m.find() && m.group(1) != null) {
+            girlId =Integer.parseInt(m.group(1));
+        }
+        return girlId;
+    }
+
 
     /**
      * 商品画像を取得

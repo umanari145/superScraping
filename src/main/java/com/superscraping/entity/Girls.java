@@ -5,43 +5,26 @@
  */
 package com.superscraping.entity;
 
-import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- *
+ * 女優のファーストコレクション
  * @author Norio
  */
-@Entity
-@Table(name = "girls")
-public class Girls extends BaseEntity implements Serializable {
-    private static final long serialVersionUID = 1L;    
+public class Girls {
        
-    @Column(name = "dmm_girl_id")
-    @Getter
-    @Setter
-    private Integer dmmGirlId;
-        
-    @Size(max = 255)
-    @Column(name = "initial")
-    @Getter
-    @Setter
-    private String initial; 
+    /**
+     * Girlのリスト
+     */
+    private final List<Girl> Girls;
     
-    @Size(max = 255)
-    @Column(name = "name")
-    @Getter
-    @Setter
-    private String name;   
-
-    @Column(name = "initial_order")
-    @Getter
-    @Setter
-    private Integer initialOrder;
+    public Girls() {
+        Girls = new ArrayList<>();
+    }
+    
+    public void addGirls(Girl girl) {
+        Girls.add(girl);
+    }
     
 }
