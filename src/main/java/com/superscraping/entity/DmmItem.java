@@ -28,7 +28,7 @@ import lombok.Setter;
  */
 @Entity
 @Table(name = "items")
-public class DmmProduct extends BaseEntity implements Serializable {
+public class DmmItem extends BaseEntity implements Serializable {
         
     private static final long serialVersionUID = 1L;
        
@@ -106,10 +106,11 @@ public class DmmProduct extends BaseEntity implements Serializable {
     @ManyToMany( mappedBy = "productList")
     private List<Tags> tagList;  
     
-    public DmmProduct() {
+    public DmmItem() {
     }
 
-    public DmmProduct(Integer id) {
+    
+    public DmmItem(Integer id) {
         this.setId(id);
     }
      
@@ -124,10 +125,10 @@ public class DmmProduct extends BaseEntity implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof DmmProduct)) {
+        if (!(object instanceof DmmItem)) {
             return false;
         }
-        DmmProduct other = (DmmProduct) object;
+        DmmItem other = (DmmItem) object;
         Integer id = this.getId();
         if ((id == null && other.getId() != null) || (id != null && !id.equals(other.getId()))) {
             return false;
