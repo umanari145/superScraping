@@ -6,7 +6,6 @@
 package com.superscraping.app.service;
 
 import com.superscraping.entity.DmmItem;
-import com.superscraping.entity.ItemLink;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -45,11 +44,11 @@ public class DmmItemServiceTest {
     public void testGetDmmItem() {
         System.out.println("getDmmItem");
         //適当にDMMから1商品を選ぶ
-        ItemLink itemLink = new ItemLink("http://www.dmm.co.jp/digital/videoa/-/detail/=/cid=41hodv021062/?i3_ref=search&i3_ord=1");
+        String itemLink = "http://www.dmm.co.jp/digital/videoa/-/detail/=/cid=41hodv021062/?i3_ref=search&i3_ord=1";
 
-        DmmItemService instance = new DmmItemService();
+        DmmItemService instance = new DmmItemService(itemLink);
         DmmItem expResult = null;
-        DmmItem result = instance.getDmmItem(itemLink);
+        DmmItem result = instance.getDmmItem();
         //assertEquals(expResult, result);
         System.out.print("final");
     }

@@ -5,7 +5,6 @@
  */
 package com.superscraping.app.service;
 
-import com.superscraping.app.ConfigManager;
 import com.superscraping.app.ScraperImpl;
 import com.superscraping.entity.DmmItem;
 import com.superscraping.entity.Girl;
@@ -15,17 +14,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -37,6 +32,11 @@ import org.jsoup.select.Elements;
 public class DmmItemService implements ScraperImpl {
 
     /**
+     * ドキュメントリンク
+     */
+    private final String itemLink;
+    
+    /**
      * DMMページのテーブル要素のindex メーカーのindex
      */
     public static final int makerTableIndex = 15;
@@ -45,15 +45,14 @@ public class DmmItemService implements ScraperImpl {
      * DMMページのテーブル要素のindex ラベルのindex
      */
     public static final int labelTableIndex = 17;
-    
+        
     /**
-     * 進捗を表すために現在何商品を獲得しているかの値
+     * コンストラクタ
+     * 
+     * @param itemLink 単一のリンク
      */
-    private Integer proceedContentsCount = 0;
-
-    private int pageCount;
-
-    public DmmItemService() {
+    public DmmItemService(String itemLink) {
+        this.itemLink = itemLink;
     }
 
     /**
@@ -71,13 +70,31 @@ public class DmmItemService implements ScraperImpl {
     }
 
     /**
+     * リンクからdocmentオブジェクトを返す
+     * 
+     * @return リンクのドキュメントオブジェクト
+     */
+    public Document getDocument() {
+        URL url = null;
+        Document doc = null;
+        try {
+            url = new URL(this.itemLink);
+            doc = Jsoup.parse(url, 3000);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ItemLink.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ItemLink.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return doc;
+    }
+    
+    /**
      * itemLinkからdmmのItemを取得
      * 
-     * @param itemLink itemのLinkオブジェクト
-     * @return dmmエンティティ
+     * @return the com.superscraping.entity.DmmItem
      */
-    public DmmItem getDmmItem(ItemLink itemLink) {
-        Document doc = itemLink.getDocument();
+    public DmmItem getDmmItem() {
+        Document doc = getDocument();
         DmmItem dmmItem = getDmmItem(doc);
         return dmmItem;
     } 
