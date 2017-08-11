@@ -5,17 +5,12 @@
  */
 package com.superscraping.app.service;
 
-import com.superscraping.app.ScraperImpl;
 import com.superscraping.entity.DmmItem;
 import com.superscraping.entity.Girl;
 import com.superscraping.entity.Girls;
-import com.superscraping.entity.ItemLink;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -26,16 +21,17 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
+ * 単一商品のデータ取得
  *
  * @author Norio
  */
-public class DmmItemService implements ScraperImpl {
+public class DmmItemService {
 
     /**
      * ドキュメントリンク
      */
     private final String itemLink;
-    
+
     /**
      * DMMページのテーブル要素のindex メーカーのindex
      */
@@ -45,10 +41,10 @@ public class DmmItemService implements ScraperImpl {
      * DMMページのテーブル要素のindex ラベルのindex
      */
     public static final int labelTableIndex = 17;
-        
+
     /**
      * コンストラクタ
-     * 
+     *
      * @param itemLink 単一のリンク
      */
     public DmmItemService(String itemLink) {
@@ -56,50 +52,36 @@ public class DmmItemService implements ScraperImpl {
     }
 
     /**
-     * 1ページあたりのリンク
-     *
-     * @param linkUrl　スタートのリンク
-     * @param i カウント数
-     * @return リンク集
-     */
-    @Override
-    public List<Map<String, String>> scarapingContents(String linkUrl, int i) {
-        //リンクからコンテンツを集める
-        List<Map<String, String>> contentsList = new ArrayList<>();
-        return contentsList;
-    }
-
-    /**
      * リンクからdocmentオブジェクトを返す
-     * 
+     *
      * @return リンクのドキュメントオブジェクト
      */
-    public Document getDocument() {
+    private Document getDocument() {
         URL url = null;
         Document doc = null;
         try {
             url = new URL(this.itemLink);
             doc = Jsoup.parse(url, 3000);
         } catch (MalformedURLException ex) {
-            Logger.getLogger(ItemLink.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.itemLink).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(ItemLink.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.itemLink).log(Level.SEVERE, null, ex);
         }
         return doc;
     }
-    
+
     /**
      * itemLinkからdmmのItemを取得
-     * 
+     *
      * @return the com.superscraping.entity.DmmItem
      */
     public DmmItem getDmmItem() {
         Document doc = getDocument();
         DmmItem dmmItem = getDmmItem(doc);
         return dmmItem;
-    } 
-    
-            /**
+    }
+
+    /**
      * Docオブジェクトからそれぞれテキストデータを取り出す
      *
      * @param doc 商品のdocオブジェクト
@@ -110,18 +92,12 @@ public class DmmItemService implements ScraperImpl {
         DmmItem dmmItem = new DmmItem();
         //商品名
         dmmItem.setProductName(getProductName(doc));
-        
-//        this.proceedContentsCount++;
-//        int proceedContentsCount2 = this.pageCount * 120 + this.proceedContentsCount;
-//        Logger.getLogger(this.getClass().getName()).log(Level.INFO, " , get{0}", new Object[]{proceedContentsCount2});
-//        Logger.getLogger(this.getClass().getName()).log(Level.INFO, " title {0} ",dmmItem.getProductName());
-
         //要約
         dmmItem.setSummary(getSummary(doc));
         //拡大画像
         dmmItem.setPictureUrl(getPicture(doc));
         //女優Idリスト
-        dmmItem.setGirls(getGirls(doc));     
+        dmmItem.setGirls(getGirls(doc));
         //テーブル系のデータ
         Elements elTd = getTableElements(doc);
         dmmItem.setMaker(getDmmElementFromTd(elTd, makerTableIndex));
@@ -158,30 +134,26 @@ public class DmmItemService implements ScraperImpl {
      * @return テーブルElement
      */
     private Elements getTableElements(Document doc) {
-        StringBuilder tableStr = new StringBuilder();
         Elements elTd = doc.select("table[class=mg-b20]").first().select("td");
-        
         //デバッグ用
         for (int i = 0; i < elTd.size(); i++) {
             System.out.println(i + " " + elTd.get(i).text());
         }
-
         return elTd;
     }
-    
+
     /**
      * テーブル要素からテキストデータを抽出
-     * 
+     *
      * @param elTd テーブル要素
      * @param i インデックス
      * @return itemの要素
      */
-    private String getDmmElementFromTd(Elements elTd, int i){
+    private String getDmmElementFromTd(Elements elTd, int i) {
         return elTd.get(i).text();
     }
 
-
-        /**
+    /**
      * 女優idを取得する
      *
      * @param doc 要素
@@ -189,13 +161,11 @@ public class DmmItemService implements ScraperImpl {
      */
     private Girls getGirls(Document doc) {
         Elements girlsLinks = doc.getElementById("performer").getElementsByTag("a");
-        String actressIdCsv = null;
-        List<String> actressIdList = new ArrayList<>();
         Girls girls = new Girls();
-        
+
         for (Element girlLink : girlsLinks) {
             Integer girlId = getGirlIdFromGirlLink(girlLink);
-            if (girlId != null ) {
+            if (girlId != null) {
                 Girl girl = new Girl(girlId);
                 girls.addGirls(girl);
             }
@@ -205,22 +175,21 @@ public class DmmItemService implements ScraperImpl {
 
     /**
      * 女優のLinkオブジェクトからidを抽出
-     * 
+     *
      * @param girlLink リンクオブジェクト
-     * @return 女優id 
+     * @return 女優id
      */
-    public Integer getGirlIdFromGirlLink(Element girlLink) {       
+    private Integer getGirlIdFromGirlLink(Element girlLink) {
 
         Integer girlId = null;
         Pattern p = Pattern.compile("id=(\\d*)");
         Matcher m = p.matcher(girlLink.getElementsByTag("a").first().attr("href"));
 
         if (m.find() && m.group(1) != null) {
-            girlId =Integer.parseInt(m.group(1));
+            girlId = Integer.parseInt(m.group(1));
         }
         return girlId;
     }
-
 
     /**
      * 商品画像を取得
@@ -229,7 +198,6 @@ public class DmmItemService implements ScraperImpl {
      * @return 拡大画像のURL
      */
     private String getPicture(Document doc) {
-        StringBuilder pictureStr = new StringBuilder();
         Elements pictureElement = doc.select("[name=package-image]");
         String pictureUrl = "";
         if (pictureElement.size() > 0) {
@@ -238,5 +206,4 @@ public class DmmItemService implements ScraperImpl {
         return pictureUrl;
     }
 
-    
 }
