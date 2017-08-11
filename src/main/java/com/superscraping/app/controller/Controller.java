@@ -91,7 +91,7 @@ public class Controller {
      */
     private DmmItem getDmmItem(String link) {
         Logger.getLogger(Controller.class.getName()).log(Level.INFO, "link {0}", link);
-        dmmItemService = new ItemScrapingService(link);
+        dmmItemService = new ItemScrapingService(link,true);
         DmmItem dmmItem = dmmItemService.getDmmItem();
         Logger.getLogger(Controller.class.getName()).log(Level.INFO, "item {0}", dmmItem.getProductName());
         return dmmItem;        

@@ -7,7 +7,6 @@ package com.superscraping.app.service;
 
 import com.superscraping.entity.DmmItem;
 import com.superscraping.entity.DmmItems;
-import com.superscraping.repository.DBbase;
 import com.superscraping.repository.ItemRepository;
 
 /**

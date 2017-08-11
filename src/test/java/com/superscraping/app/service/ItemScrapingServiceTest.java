@@ -46,7 +46,7 @@ public class ItemScrapingServiceTest {
         //適当にDMMから1商品を選ぶ
         String itemLink = "http://www.dmm.co.jp/digital/videoa/-/detail/=/cid=oycvr00003/?i3_ref=list&i3_ord=1";
 
-        ItemScrapingService instance = new ItemScrapingService(itemLink);
+        ItemScrapingService instance = new ItemScrapingService(itemLink,true);
         DmmItem expResult = null;
         DmmItem result = instance.getDmmItem();
         //assertEquals(expResult, result);

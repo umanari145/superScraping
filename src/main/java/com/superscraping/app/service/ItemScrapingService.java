@@ -35,13 +35,23 @@ public class ItemScrapingService {
     /**
      * DMMページのテーブル要素のindex メーカーのindex
      */
-    public static final int makerTableIndex = 15;
+    private static final int makerTableIndex = 15;
 
     /**
      * DMMページのテーブル要素のindex ラベルのindex
      */
-    public static final int labelTableIndex = 17;
+    private static final int labelTableIndex = 17;
 
+    /**
+     * DMMページのテーブル要素のindex 品番のindex
+     */
+    private static final int productCodeTableIndex = 23;
+    
+    /**
+     * デバッグモード
+     */
+    private final boolean isDebug;
+    
     /**
      * コンストラクタ
      *
@@ -49,8 +59,14 @@ public class ItemScrapingService {
      */
     public ItemScrapingService(String itemLink) {
         this.itemLink = itemLink;
+        this.isDebug = false;
     }
 
+    public ItemScrapingService(String itemLink, boolean isDebug) {
+        this.itemLink = itemLink;
+        this.isDebug = isDebug;
+    }
+        
     /**
      * リンクからdocmentオブジェクトを返す
      *
@@ -102,6 +118,8 @@ public class ItemScrapingService {
         Elements elTd = getTableElements(doc);
         dmmItem.setMaker(getDmmElementFromTd(elTd, makerTableIndex));
         dmmItem.setLabel(getDmmElementFromTd(elTd, labelTableIndex));
+        dmmItem.setProductCode(getDmmElementFromTd(elTd, productCodeTableIndex));
+
         return dmmItem;
     }
 
@@ -136,7 +154,7 @@ public class ItemScrapingService {
     private Elements getTableElements(Document doc) {
         Elements elTd = doc.select("table[class=mg-b20]").first().select("td");
         //デバッグ用
-        // for (int i = 0; i < elTd.size(); i++) System.out.println(i + " " + elTd.get(i).text());
+        if(this.isDebug) for (int i = 0; i < elTd.size(); i++) System.out.println(i + " " + elTd.get(i).text());
         return elTd;
     }
 

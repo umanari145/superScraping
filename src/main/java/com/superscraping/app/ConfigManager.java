@@ -20,7 +20,6 @@ public class ConfigManager {
      * 単一ページのテストページ数
      */
     public static final int TEST_ITEM_COUNT = 5;
-
            
     /**
      * 全体ページのテストフラグ
