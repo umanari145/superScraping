@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.superscraping.app.service;
+package com.superscraping.repository;
 
 import com.superscraping.entity.DmmItem;
+import java.util.List;
+import javax.persistence.Persistence;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,41 +18,42 @@ import org.junit.Test;
  *
  * @author Norio
  */
-public class DmmItemServiceTest {
+public class ItemRepositoryTest {
     
-    public DmmItemServiceTest() {
+    public ItemRepositoryTest() {
     }
     
     @BeforeClass
     public static void setUpClass() {
+
     }
     
     @AfterClass
     public static void tearDownClass() {
+
     }
     
     @Before
     public void setUp() {
+
     }
     
     @After
     public void tearDown() {
     }
 
-    /**
-     * Test of getDmmItem method, of class DmmItemService.
-     */
     @Test
-    public void testGetDmmItem() {
-        System.out.println("getDmmItem");
-        //適当にDMMから1商品を選ぶ
-        String itemLink = "http://www.dmm.co.jp/digital/videoa/-/detail/=/cid=41hodv021062/?i3_ref=search&i3_ord=1";
-
-        DmmItemService instance = new DmmItemService(itemLink);
-        DmmItem expResult = null;
-        DmmItem result = instance.getDmmItem();
-        //assertEquals(expResult, result);
-        System.out.print("final");
+    public void testRegist(){
+        ItemRepository itemrepo = new ItemRepository();
+        DmmItem dmmItem = new DmmItem();
+        dmmItem.setProductName("sample2");
+        
+        itemrepo.startTransaction();
+        itemrepo.registItem(dmmItem);
+        itemrepo.transactionCommit();
+        
+        List<DmmItem> dmmItems = itemrepo.getAll();
+        System.out.print("aaaa");
     }
     
 }

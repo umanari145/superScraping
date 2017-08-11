@@ -12,14 +12,15 @@ package com.superscraping.app;
 public class ConfigManager {
     
     /**
-     * 単一一覧ページのテストフラグ
+     * 単一ページのテストフラグ
      */
-    public static final boolean IS_SINGLE_CONTENTS_TEST = true;
+    public static final boolean IS_SINGLE_ITEM_TEST = true;
 
     /**
-     * 単一一覧ページのテストリンク数
+     * 単一ページのテストページ数
      */
-    public static final int TEST_CONTENTS_COUNT=2; 
+    public static final int TEST_ITEM_COUNT = 20;
+
            
     /**
      * 全体ページのテストフラグ
@@ -29,12 +30,12 @@ public class ConfigManager {
     /**
      * 全体ページのテストページ数
      */
-    public static final int TEST_PAGE_COUNT = 3;
+    public static final int TEST_PAGE_COUNT = 2; 
 
     /**
      * スタートのURL
      */
-    public static final String SITE_URL="http://www.dmm.co.jp/digital/videoa/-/list/=/article=keyword/id=1018/limit=120/sort=ranking/"; 
+    public static final String SITE_URL = "http://www.dmm.co.jp/digital/videoa/-/list/=/article=keyword/id=1018/limit=120/sort=ranking/"; 
     
     /**
      * 女優リストのURL

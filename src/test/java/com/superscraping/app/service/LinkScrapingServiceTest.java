@@ -20,9 +20,9 @@ import static org.junit.Assert.*;
  *
  * @author Norio
  */
-public class DmmItemsServiceTest {
+public class LinkScrapingServiceTest {
     
-    public DmmItemsServiceTest() {
+    public LinkScrapingServiceTest() {
     }
     
     @BeforeClass
@@ -43,18 +43,18 @@ public class DmmItemsServiceTest {
 
     
      /**
-     * Test of getItemLinks method, of class DmmItemsService.
+     * Test of getItemLinks method, of class LinkScrapingService.
      */
     @Test
     public void testGetTotalNum() {
         System.out.println("getItemLinks");
         String itemsLinkUrl = "http://www.dmm.co.jp/digital/videoa/-/list/=/sort=ranking/";
-        DmmItemsService instance = new DmmItemsService(itemsLinkUrl);
+        LinkScrapingService instance = new LinkScrapingService(itemsLinkUrl);
         
         try {
             List<String> links = instance.getLinkStart();
         } catch (Exception ex) {
-            Logger.getLogger(DmmItemsServiceTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LinkScrapingServiceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         System.out.println("hogehoge");

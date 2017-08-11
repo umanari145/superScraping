@@ -25,7 +25,7 @@ import org.jsoup.select.Elements;
  *
  * @author Norio
  */
-public class DmmItemService {
+public class ItemScrapingService {
 
     /**
      * ドキュメントリンク
@@ -47,7 +47,7 @@ public class DmmItemService {
      *
      * @param itemLink 単一のリンク
      */
-    public DmmItemService(String itemLink) {
+    public ItemScrapingService(String itemLink) {
         this.itemLink = itemLink;
     }
 
@@ -136,9 +136,7 @@ public class DmmItemService {
     private Elements getTableElements(Document doc) {
         Elements elTd = doc.select("table[class=mg-b20]").first().select("td");
         //デバッグ用
-        for (int i = 0; i < elTd.size(); i++) {
-            System.out.println(i + " " + elTd.get(i).text());
-        }
+        // for (int i = 0; i < elTd.size(); i++) System.out.println(i + " " + elTd.get(i).text());
         return elTd;
     }
 
@@ -160,9 +158,14 @@ public class DmmItemService {
      * @return 女優Idを_でつなぐ
      */
     private Girls getGirls(Document doc) {
-        Elements girlsLinks = doc.getElementById("performer").getElementsByTag("a");
         Girls girls = new Girls();
-
+        
+        Element ele = doc.getElementById("performer");
+        if (ele == null) return girls;
+        
+        Elements girlsLinks = ele.getElementsByTag("a");
+        if (girlsLinks == null) return girls;
+        
         for (Element girlLink : girlsLinks) {
             Integer girlId = getGirlIdFromGirlLink(girlLink);
             if (girlId != null) {

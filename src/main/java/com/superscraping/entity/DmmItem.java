@@ -39,15 +39,7 @@ public class DmmItem extends BaseEntity implements Serializable {
     @Getter
     @Setter
     private String productName;
-    
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "productUrl")
-    @Getter
-    @Setter
-    private String productUrl;
-    
+        
     @Column(name = "releaseDate")
     @Temporal(TemporalType.TIMESTAMP)
     @Getter @Setter    
@@ -102,10 +94,7 @@ public class DmmItem extends BaseEntity implements Serializable {
     @Getter
     @Setter
     private boolean deleteFlg;
-    
-    @ManyToMany( mappedBy = "productList")
-    private List<Tags> tagList;  
-    
+        
     public DmmItem() {
     }
 
@@ -139,7 +128,7 @@ public class DmmItem extends BaseEntity implements Serializable {
     @Override
     public String toString() {
         Integer id = this.getId();
-        return "com.superscraping.entity.Product[ id=" + id + " ]";
+        return "com.superscraping.entity.DmmItem[ id=" + id + " ]";
     }
    
 }

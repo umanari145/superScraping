@@ -1,5 +1,5 @@
 
-import com.superscraping.entity.DmmProduct;
+import com.superscraping.entity.DmmItem;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -44,7 +44,7 @@ public class EJBTest {
     
     @Test
     public void createEntity(){
-        DmmProduct product = new DmmProduct();
+        DmmItem product = new DmmItem();
         product.setProductName("sample1");
         tx.begin();
         em.persist(product);
