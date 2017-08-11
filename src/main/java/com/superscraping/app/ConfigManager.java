@@ -19,7 +19,7 @@ public class ConfigManager {
     /**
      * 単一ページのテストページ数
      */
-    public static final int TEST_ITEM_COUNT = 20;
+    public static final int TEST_ITEM_COUNT = 5;
 
            
     /**
@@ -35,7 +35,7 @@ public class ConfigManager {
     /**
      * スタートのURL
      */
-    public static final String SITE_URL = "http://www.dmm.co.jp/digital/videoa/-/list/=/article=keyword/id=1018/limit=120/sort=ranking/"; 
+    public static final String SITE_URL = "http://www.dmm.co.jp/digital/videoa/-/list/=/article=keyword/id=1018/limit=30/sort=ranking/"; 
     
     /**
      * 女優リストのURL

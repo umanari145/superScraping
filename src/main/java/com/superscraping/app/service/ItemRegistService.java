@@ -6,6 +6,8 @@
 package com.superscraping.app.service;
 
 import com.superscraping.entity.DmmItem;
+import com.superscraping.entity.DmmItems;
+import com.superscraping.repository.DBbase;
 import com.superscraping.repository.ItemRepository;
 
 /**
@@ -25,8 +27,23 @@ public class ItemRegistService {
         itemRepository = new ItemRepository();
     }
 
-    public void registItem(DmmItem dmmItem){
+    /**
+     * 複数itemの一括登録(bulkInsertあるにはあるがそんなに高速化がきかないっぽいのでそのままで・・)
+     * 
+     * @param dmmItems 
+     */
+    public void registItems(DmmItems dmmItems) {
         
+        itemRepository.startTransaction();
+        
+        int dmmSize = dmmItems.size();
+        for (int i = 0; i < dmmSize; i++) {
+            DmmItem dmmItem = dmmItems.get(i);
+            itemRepository.registItem(dmmItem);
+        }
+        
+        itemRepository.transactionCommit();
     }
-  
+
+
 }

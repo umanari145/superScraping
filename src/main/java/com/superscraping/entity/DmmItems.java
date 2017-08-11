@@ -43,4 +43,14 @@ public class DmmItems {
     public int size() {
         return dmmItems.size();
     }
+    
+    /**
+     * item数
+     * 
+     * @param i index
+     * @return dmmItem
+     */
+    public DmmItem get(Integer i) {
+        return dmmItems.get(i);
+    }
 }
