@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.superscraping.app.link;
+package com.superscraping.app.service;
 
 import com.superscraping.app.ConfigManager;
 import com.superscraping.app.ScraperImpl;
@@ -35,8 +35,15 @@ public class ActressScraper implements ScraperImpl {
     @Setter
     private Integer field_count;
 
+    /**
+     * 
+     * 
+     * @param linkUrl スタートのURL
+     * @param i 不要だが別メソッドで作ってしまったので仕方なく・・
+     * @return 
+     */
     @Override
-    public List<Map<String, String>> scarapingContents(String linkUrl) {
+    public List<Map<String, String>> scarapingContents(String linkUrl,int i) {
         String[] vowelArr = {"a", "i", "u", "e", "o"};
         String[] consonantArr = {"", "k", "s", "t", "n", "h", "m", "y", "r", "w"};
 

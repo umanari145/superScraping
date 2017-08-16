@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.superscraping.em;
+package com.superscraping.repository;
 
 import com.superscraping.entity.Girls;
 import com.superscraping.entity.ItemGirls;

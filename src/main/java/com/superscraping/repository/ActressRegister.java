@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.superscraping.em;
+package com.superscraping.repository;
 
 import com.superscraping.app.RegistImpl;
-import com.superscraping.entity.DmmProduct;
-import com.superscraping.entity.Girls;
+import com.superscraping.entity.DmmItemEntity;
+import com.superscraping.entity.Girl;
 import java.util.List;
 import java.util.Map;
 import lombok.Getter;
@@ -32,7 +32,7 @@ public class ActressRegister implements RegistImpl {
         elementRegister.startTransaction();
 
         contentDetail.stream().forEach(contents->{
-                Girls girl = new Girls();
+                Girl girl = new Girl();
                 if( contents.get("dmm_girls_id") != null && contents.get("dmm_girls_id").length() >0 ) {
                     girl.setDmmGirlId(Integer.parseInt(contents.get("dmm_girls_id")));
                     girl.setInitial(contents.get("initial"));
@@ -46,7 +46,7 @@ public class ActressRegister implements RegistImpl {
     }
 
     @Override
-    public List<DmmProduct> getEntity() {
+    public List<DmmItemEntity> getEntity() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

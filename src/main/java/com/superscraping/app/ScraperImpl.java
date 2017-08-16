@@ -14,6 +14,6 @@ import java.util.Map;
  */
 public interface ScraperImpl {
     
-    public List<Map<String,String>> scarapingContents(String linkUrl);
+    public List<Map<String,String>> scarapingContents(String linkUrl ,int i);
   
 }

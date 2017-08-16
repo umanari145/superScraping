@@ -29,11 +29,7 @@ public class Tags extends BaseEntity implements Serializable {
     @Column(name = "tag")
     @Getter 
     @Setter    
-    private String tag;
-    
-    @ManyToMany
-    @JoinTable(name="item_tags", joinColumns = @JoinColumn( name = "tag_id"),
-            inverseJoinColumns = @JoinColumn(name="item_id"))
-    private List<DmmProduct> productList;
+    private String tag;   
+
     
 }

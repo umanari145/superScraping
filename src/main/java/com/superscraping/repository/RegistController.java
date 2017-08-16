@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.superscraping.em;
+package com.superscraping.repository;
 
 import com.superscraping.app.RegistImpl;
 import com.superscraping.entity.BaseEntity;
 
-import com.superscraping.entity.DmmProduct;
-import com.superscraping.entity.Girls;
+import com.superscraping.entity.DmmItemEntity;
+import com.superscraping.entity.Girl;
 import com.superscraping.entity.Tags;
 import java.util.List;
 import java.util.Map;
@@ -24,14 +24,14 @@ public class RegistController implements RegistImpl {
    
     @Getter
     @Setter
-    private ProductRegister productRegister;
+    private ItemRepository productRegister;
 
     @Getter
     @Setter
     private ElementRegister elementRegister;
 
     public RegistController() {
-        productRegister = new ProductRegister();
+        productRegister = new ItemRepository();
         elementRegister = new ElementRegister();
     }
 
@@ -41,7 +41,7 @@ public class RegistController implements RegistImpl {
         contentDetail.stream().forEach(contents -> {
             BaseEntity tmpProduct = productRegister.mapToEntity(contents);
 
-            DmmProduct product = (DmmProduct) tmpProduct;
+            DmmItemEntity product = (DmmItemEntity) tmpProduct;
 
             //同一品番のデータがすでに登録されていないかをチェックする
             if (product.getProductCode() != null && product.getProductCode().length() > 0
@@ -56,13 +56,12 @@ public class RegistController implements RegistImpl {
                 List<Tags> tagList = elementRegister.getTagData(product.getGenre());                
                 
                 //タグの保存
-
                 if( tagList.size() >0 ){
                     elementRegister.registRelateProductAndTag(product.getId(), tagList);
                 }                
                 //女優リストへの保存
                 if( product.getActressIdList() != null && !product.getActressIdList().isEmpty()){
-                    List<Girls> girlList = elementRegister.getGirlsData(product.getActressIdList());
+                    List<Girl> girlList = elementRegister.getGirlsData(product.getActressIdList());
                     //女優データの保存
                     if( girlList.size() >0){
                         elementRegister.registRelateProductAndGirl(product.getId(),girlList);                
@@ -77,7 +76,7 @@ public class RegistController implements RegistImpl {
     }
 
     @Override
-    public List<DmmProduct> getEntity() {
+    public List<DmmItemEntity> getEntity() {
         return productRegister.getAll();
     }
 

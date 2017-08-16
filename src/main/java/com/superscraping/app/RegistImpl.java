@@ -5,7 +5,7 @@
  */
 package com.superscraping.app;
 
-import com.superscraping.entity.DmmProduct;
+import com.superscraping.entity.DmmItemEntity;
 import java.util.List;
 import java.util.Map;
 
@@ -27,5 +27,5 @@ public interface RegistImpl {
      * 
      * @return エンティティのリスト 
      */
-    public List<DmmProduct> getEntity();
+    public List<DmmItemEntity> getEntity();
 }
