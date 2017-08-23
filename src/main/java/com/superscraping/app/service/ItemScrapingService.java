@@ -31,21 +31,6 @@ public class ItemScrapingService {
      * ドキュメントリンク
      */
     private final String itemLink;
-
-    /**
-     * DMMページのテーブル要素のindex メーカーのindex
-     */
-    private static final int makerTableIndex = 15;
-
-    /**
-     * DMMページのテーブル要素のindex ラベルのindex
-     */
-    private static final int labelTableIndex = 17;
-
-    /**
-     * DMMページのテーブル要素のindex 品番のindex
-     */
-    private static final int productCodeTableIndex = 23;
     
     /**
      * デバッグモード
@@ -72,7 +57,7 @@ public class ItemScrapingService {
      *
      * @return リンクのドキュメントオブジェクト
      */
-    private Document getDocument() {
+    public Document getDocument() {
         URL url = null;
         Document doc = null;
         try {
@@ -114,11 +99,13 @@ public class ItemScrapingService {
         dmmItem.setPictureUrl(getPicture(doc));
         //女優Idリスト
         dmmItem.setGirls(getGirls(doc));
-        //テーブル系のデータ
+        
+        //テーブル(イレギュラー)系のデータ
         Elements elTd = getTableElements(doc);
-        dmmItem.setMaker(getDmmElementFromTd(elTd, makerTableIndex));
-        dmmItem.setLabel(getDmmElementFromTd(elTd, labelTableIndex));
-        dmmItem.setProductCode(getDmmElementFromTd(elTd, productCodeTableIndex));
+        
+        dmmItem.setMaker(getStrByIrregularElement(elTd,"メーカー："));
+        dmmItem.setLabel(getStrByIrregularElement(elTd,"レーベル："));
+        dmmItem.setProductCode(getStrByIrregularElement(elTd,"品番："));
 
         return dmmItem;
     }
@@ -158,6 +145,37 @@ public class ItemScrapingService {
         return elTd;
     }
 
+    /**
+     * テーブル要素から文字列を与えてその要素を取得する
+     * 
+     * @param elTd テーブル要素
+     * @param targetStr　対象文字列
+     * @return 抽出された文字列
+     */
+    private String getStrByIrregularElement(Elements elTd, String targetStr) {
+        Integer makeElementIndex = getElementIndex(elTd, targetStr);        
+        String extractStr = getDmmElementFromTd(elTd, makeElementIndex);
+        return extractStr;
+    }
+    
+    /**
+     * 要素の番号を取得
+     *
+     * @param elTd テーブル要素
+     * @param itemEleStr 要素文字列
+     * @return
+     */
+    public Integer getElementIndex(Elements elTd, String itemEleStr) {
+        Integer indexNumber = null;
+        for (int i = 0; i < elTd.size(); i++) {
+            if (elTd.get(i).text().equals(itemEleStr)) {
+                indexNumber = i + 1;
+                break;
+            }
+        }
+        return indexNumber;
+    }
+    
     /**
      * テーブル要素からテキストデータを抽出
      *
