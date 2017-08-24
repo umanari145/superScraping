@@ -29,7 +29,7 @@ import org.jsoup.select.Elements;
  *
  * @author Norio
  */
-public class ActressScraper implements ScraperImpl {
+public class ActressScraperService implements ScraperImpl {
 
     @Getter
     @Setter
@@ -105,7 +105,7 @@ public class ActressScraper implements ScraperImpl {
                 actressPageCount = Integer.parseInt(m.group(1));
             }
         } catch (IOException ex) {
-            Logger.getLogger(ActressScraper.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ActressScraperService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return actressPageCount;
     }
@@ -133,7 +133,7 @@ public class ActressScraper implements ScraperImpl {
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(ActressScraper.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ActressScraperService.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return actressList;

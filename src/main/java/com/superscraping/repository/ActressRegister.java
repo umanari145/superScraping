@@ -7,7 +7,7 @@ package com.superscraping.repository;
 
 import com.superscraping.app.RegistImpl;
 import com.superscraping.entity.DmmItemEntity;
-import com.superscraping.entity.Girl;
+import com.superscraping.entity.Actress;
 import java.util.List;
 import java.util.Map;
 import lombok.Getter;
@@ -32,7 +32,7 @@ public class ActressRegister implements RegistImpl {
         elementRegister.startTransaction();
 
         contentDetail.stream().forEach(contents->{
-                Girl girl = new Girl();
+                Actress girl = new Actress();
                 if( contents.get("dmm_girls_id") != null && contents.get("dmm_girls_id").length() >0 ) {
                     girl.setDmmGirlId(Integer.parseInt(contents.get("dmm_girls_id")));
                     girl.setInitial(contents.get("initial"));

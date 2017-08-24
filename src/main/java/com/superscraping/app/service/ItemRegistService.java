@@ -34,13 +34,12 @@ public class ItemRegistService {
     public void registItems(DmmItems dmmItems) {
         
         itemRepository.startTransaction();
-        
         int dmmSize = dmmItems.size();
         for (int i = 0; i < dmmSize; i++) {
             DmmItem dmmItem = dmmItems.get(i);
             itemRepository.registItem(dmmItem);
         }
-        
+       
         itemRepository.transactionCommit();
     }
 

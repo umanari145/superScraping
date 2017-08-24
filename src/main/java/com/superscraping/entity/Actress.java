@@ -18,14 +18,14 @@ import lombok.Setter;
  * @author Norio
  */
 @Entity
-@Table(name = "girls")
-public class Girl extends BaseEntity implements Serializable {
+@Table(name = "actress")
+public class Actress extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;    
        
-    @Column(name = "dmm_girl_id")
+    @Column(name = "dmm_actress_id")
     @Getter
     @Setter
-    private Integer dmmGirlId;
+    private Integer dmmActressId;
         
     @Size(max = 255)
     @Column(name = "initial")
@@ -44,11 +44,11 @@ public class Girl extends BaseEntity implements Serializable {
     @Setter
     private Integer initialOrder;
     
-    public Girl() {
+    public Actress() {
         
     }
     
-    public Girl(Integer dmmGirlId) {
-        this.dmmGirlId = dmmGirlId;
+    public Actress(Integer dmmActresslId) {
+        this.dmmActressId = dmmActresslId;
     }
 }

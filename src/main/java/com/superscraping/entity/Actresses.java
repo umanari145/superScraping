@@ -12,19 +12,19 @@ import java.util.List;
  * 女優のファーストコレクション
  * @author Norio
  */
-public class Girls {
+public class Actresses {
        
     /**
-     * Girlのリスト
+     * Actressのリスト
      */
-    private final List<Girl> Girls;
+    private final List<Actress> Actresses;
     
-    public Girls() {
-        Girls = new ArrayList<>();
+    public Actresses() {
+        Actresses = new ArrayList<>();
     }
     
-    public void addGirls(Girl girl) {
-        Girls.add(girl);
+    public void addActresses(Actress actress) {
+        Actresses.add(actress);
     }
     
 }

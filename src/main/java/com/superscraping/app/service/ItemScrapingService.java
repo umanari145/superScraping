@@ -6,8 +6,8 @@
 package com.superscraping.app.service;
 
 import com.superscraping.entity.DmmItem;
-import com.superscraping.entity.Girl;
-import com.superscraping.entity.Girls;
+import com.superscraping.entity.Actress;
+import com.superscraping.entity.Actresses;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -98,7 +98,7 @@ public class ItemScrapingService {
         //拡大画像
         dmmItem.setPictureUrl(getPicture(doc));
         //女優Idリスト
-        dmmItem.setGirls(getGirls(doc));
+        dmmItem.setActresses(getActresses(doc));
         
         //テーブル(イレギュラー)系のデータ
         Elements elTd = getTableElements(doc);
@@ -193,41 +193,41 @@ public class ItemScrapingService {
      * @param doc 要素
      * @return 女優Idを_でつなぐ
      */
-    private Girls getGirls(Document doc) {
-        Girls girls = new Girls();
+    private Actresses getActresses(Document doc) {
+        Actresses actresses = new Actresses();
         
         Element ele = doc.getElementById("performer");
-        if (ele == null) return girls;
+        if (ele == null) return actresses;
         
-        Elements girlsLinks = ele.getElementsByTag("a");
-        if (girlsLinks == null) return girls;
+        Elements actressesLinks = ele.getElementsByTag("a");
+        if (actressesLinks == null) return actresses;
         
-        for (Element girlLink : girlsLinks) {
-            Integer girlId = getGirlIdFromGirlLink(girlLink);
-            if (girlId != null) {
-                Girl girl = new Girl(girlId);
-                girls.addGirls(girl);
+        for (Element actressLink : actressesLinks) {
+            Integer actressId = getActressIdFromActressLink(actressLink);
+            if (actressId != null) {
+                Actress actress = new Actress(actressId);
+                actresses.addActresses(actress);
             }
         }
-        return girls;
+        return actresses;
     }
 
     /**
      * 女優のLinkオブジェクトからidを抽出
      *
-     * @param girlLink リンクオブジェクト
+     * @param actresslLink リンクオブジェクト
      * @return 女優id
      */
-    private Integer getGirlIdFromGirlLink(Element girlLink) {
+    private Integer getActressIdFromActressLink(Element actresslLink) {
 
-        Integer girlId = null;
+        Integer actressId = null;
         Pattern p = Pattern.compile("id=(\\d*)");
-        Matcher m = p.matcher(girlLink.getElementsByTag("a").first().attr("href"));
+        Matcher m = p.matcher(actresslLink.getElementsByTag("a").first().attr("href"));
 
         if (m.find() && m.group(1) != null) {
-            girlId = Integer.parseInt(m.group(1));
+            actressId = Integer.parseInt(m.group(1));
         }
-        return girlId;
+        return actressId;
     }
 
     /**

@@ -8,7 +8,7 @@ package com.superscraping.app.controller;
 import com.superscraping.app.ConfigManager;
 import com.superscraping.app.RegistImpl;
 import com.superscraping.app.ScraperImpl;
-import com.superscraping.app.service.ActressScraper;
+import com.superscraping.app.service.ActressScraperService;
 import com.superscraping.app.service.ItemRegistService;
 import com.superscraping.app.service.ItemScrapingService;
 import com.superscraping.app.service.LinkScrapingService;
@@ -50,7 +50,7 @@ public class Controller {
     }
 
     public Controller() {
-        actressScraper = new ActressScraper();
+        actressScraper = new ActressScraperService();
         dmmItemsService = new LinkScrapingService(configManager.SITE_URL);
         itemRegistService = new ItemRegistService();
         //actressRegister = new ActressRegister();

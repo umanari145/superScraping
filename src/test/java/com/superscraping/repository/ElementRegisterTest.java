@@ -5,7 +5,7 @@
  */
 package com.superscraping.repository;
 
-import com.superscraping.entity.Girls;
+import com.superscraping.entity.Actresses;
 import com.superscraping.entity.Tags;
 import java.util.List;
 import org.junit.After;
@@ -63,8 +63,8 @@ public class ElementRegisterTest {
         System.out.println("getGirlsData");
         List<String> girlIdList = null;
         ElementRegister instance = new ElementRegister();
-        List<Girls> expResult = null;
-        List<Girls> result = instance.getGirlsData(girlIdList);
+        List<Actresses> expResult = null;
+        List<Actresses> result = instance.getGirlsData(girlIdList);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -76,7 +76,7 @@ public class ElementRegisterTest {
     @Test
     public void testRegistGirl() {
         System.out.println("registGirl");
-        Girls girl = null;
+        Actresses girl = null;
         ElementRegister instance = new ElementRegister();
         instance.registGirl(girl);
         // TODO review the generated test code and remove the default call to fail.
@@ -104,7 +104,7 @@ public class ElementRegisterTest {
     public void testRegistRelateProductAndGirl() {
         System.out.println("registRelateProductAndGirl");
         Integer productId = null;
-        List<Girls> girlList = null;
+        List<Actresses> girlList = null;
         ElementRegister instance = new ElementRegister();
         instance.registRelateProductAndGirl(productId, girlList);
         // TODO review the generated test code and remove the default call to fail.

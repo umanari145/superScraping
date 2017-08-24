@@ -5,7 +5,7 @@
  */
 package com.superscraping.repository;
 
-import com.superscraping.entity.Girls;
+import com.superscraping.entity.Actresses;
 import com.superscraping.entity.ItemGirls;
 import com.superscraping.entity.ItemTags;
 import com.superscraping.entity.Tags;
@@ -52,15 +52,15 @@ public class ElementRegister extends DBbase {
      * @param girlIdList
      * @return girlリスト
      */
-    public List<Girls> getGirlsData(List<String> girlIdList) {
-        List<Girls> girlList = new ArrayList<>();
+    public List<Actresses> getGirlsData(List<String> girlIdList) {
+        List<Actresses> girlList = new ArrayList<>();
 
         if( girlIdList.isEmpty() ){
             return girlList;
         }
       
         for (String girlId : girlIdList) {
-            Girls girlsEntity = this.findGirlClass(girlId); 
+            Actresses girlsEntity = this.findGirlClass(girlId); 
             if( girlsEntity != null){
                 girlList.add(girlsEntity);
             }
@@ -99,7 +99,7 @@ public class ElementRegister extends DBbase {
      * 
      * @param girl Girlオブジェクト 
      */
-    public void registGirl(Girls girl){
+    public void registGirl(Actresses girl){
         this.create(girl);
     }
 
@@ -109,13 +109,13 @@ public class ElementRegister extends DBbase {
      * @param girlId 女優Id
      * @return 女優エンティティ
      */
-    private Girls findGirlClass(String girlId) {
+    private Actresses findGirlClass(String girlId) {
         EntityManager em = this.getEm();
-        List<Girls> girlList = em.createQuery(" SELECT g FROM Girls g WHERE g.dmmGirlId = :girlId ", Girls.class)
+        List<Actresses> girlList = em.createQuery(" SELECT g FROM Girls g WHERE g.dmmGirlId = :girlId ", Actresses.class)
                 .setParameter("girlId", Integer.parseInt(girlId))
                 .getResultList();
 
-        Girls girlEntity = null;
+        Actresses girlEntity = null;
         if (girlList.size() > 0) {
             //リストから取得
             girlEntity = girlList.get(0);
@@ -145,7 +145,7 @@ public class ElementRegister extends DBbase {
      * @param productId 商品id
      * @param girlList 女優リスト
      */
-    public void registRelateProductAndGirl(Integer productId, List<Girls> girlList) {
+    public void registRelateProductAndGirl(Integer productId, List<Actresses> girlList) {
         girlList.stream().forEach(girl -> {
             ItemGirls itemGirls = new ItemGirls();
             itemGirls.setItemId(productId);

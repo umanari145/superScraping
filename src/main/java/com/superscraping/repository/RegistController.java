@@ -9,7 +9,7 @@ import com.superscraping.app.RegistImpl;
 import com.superscraping.entity.BaseEntity;
 
 import com.superscraping.entity.DmmItemEntity;
-import com.superscraping.entity.Girl;
+import com.superscraping.entity.Actress;
 import com.superscraping.entity.Tags;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +61,7 @@ public class RegistController implements RegistImpl {
                 }                
                 //女優リストへの保存
                 if( product.getActressIdList() != null && !product.getActressIdList().isEmpty()){
-                    List<Girl> girlList = elementRegister.getGirlsData(product.getActressIdList());
+                    List<Actress> girlList = elementRegister.getGirlsData(product.getActressIdList());
                     //女優データの保存
                     if( girlList.size() >0){
                         elementRegister.registRelateProductAndGirl(product.getId(),girlList);                

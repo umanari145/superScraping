@@ -54,7 +54,7 @@ public class DmmItem extends BaseEntity implements Serializable {
     @Getter
     @Setter
     @Transient
-    private Girls girls;
+    private Actresses actresses;
     
     @Size(max = 255)
     @Column(name = "pictureUrl")
