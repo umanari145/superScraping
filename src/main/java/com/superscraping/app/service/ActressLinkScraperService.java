@@ -53,10 +53,7 @@ public class ActressLinkScraperService {
     public List<String> getActressLinks() {
         List<String> availableInitialList = getAvailableInitial();
         List<String> actressList = new ArrayList<>();
-        
-        for(String initial:availableInitialList) {
-            actressList.addAll(getActressLinkByInitial(initial));
-        }
+        availableInitialList.stream().forEach((initial) -> actressList.addAll(getActressLinkByInitial(initial)));
         
         return actressList;
     }
@@ -118,7 +115,6 @@ public class ActressLinkScraperService {
         if (pageLoopCnt > 0) {
             for (Integer i = 1; i <= pageLoopCnt; i++) {
                 String actressUrl = getActressUrl(initial, i);
-                if(this.isDebug && i > 100 ) break;
                 Logger.getLogger(this.getClass().getName()).log(Level.INFO, "actressURL {0}", actressUrl);
                 actressLinkList.add(actressUrl);
             }
