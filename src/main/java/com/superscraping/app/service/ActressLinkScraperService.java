@@ -5,15 +5,11 @@
  */
 package com.superscraping.app.service;
 
-import com.superscraping.app.ConfigManager;
-import com.superscraping.app.ScraperImpl;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -23,8 +19,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 /**
  * 女優リンクの取得
@@ -59,11 +53,11 @@ public class ActressLinkScraperService {
     public List<String> getActressLinks() {
         List<String> availableInitialList = getAvailableInitial();
         List<String> actressList = new ArrayList<>();
-        availableInitialList.stream().forEach( initial -> {
-            List<String> actressListByInitial = getActressLinkByInitial(initial);
-            actressList.addAll(actressListByInitial);
-            if(this.isDebug && actressList.size() > 100 ) return;
-         });
+        
+        for(String initial:availableInitialList) {
+            actressList.addAll(getActressLinkByInitial(initial));
+        }
+        
         return actressList;
     }
 
@@ -124,6 +118,7 @@ public class ActressLinkScraperService {
         if (pageLoopCnt > 0) {
             for (Integer i = 1; i <= pageLoopCnt; i++) {
                 String actressUrl = getActressUrl(initial, i);
+                if(this.isDebug && i > 100 ) break;
                 Logger.getLogger(this.getClass().getName()).log(Level.INFO, "actressURL {0}", actressUrl);
                 actressLinkList.add(actressUrl);
             }

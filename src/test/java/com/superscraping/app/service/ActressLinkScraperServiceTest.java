@@ -5,6 +5,7 @@
  */
 package com.superscraping.app.service;
 
+import com.superscraping.app.ConfigManager;
 import java.util.List;
 import java.util.Map;
 import org.junit.After;
@@ -46,8 +47,8 @@ public class ActressLinkScraperServiceTest {
     public void testScarapingContents() {
         System.out.println("scarapingContents");
         String linkUrl = "";
-        ActressLinkScraperService instance = new ActressLinkScraperService();
-        List<String> result = instance.getAvailableInitial();
+        ActressLinkScraperService instance = new ActressLinkScraperService(ConfigManager.ACTRESS_SITE_URL);
+        List<String> result = instance.getActressLinks();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
