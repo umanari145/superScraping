@@ -40,9 +40,15 @@ public class ActressLinkScraperService {
     @Getter
     @Setter
     private String linkUrl;
+    
+    
+    @Getter
+    @Setter
+    private boolean isDebug;
 
     public ActressLinkScraperService(String linkUrl) {
         this.linkUrl = linkUrl;
+        this.isDebug = true;
     }
 
     /**
@@ -56,6 +62,7 @@ public class ActressLinkScraperService {
         availableInitialList.stream().forEach( initial -> {
             List<String> actressListByInitial = getActressLinkByInitial(initial);
             actressList.addAll(actressListByInitial);
+            if(this.isDebug && actressList.size() > 100 ) return;
          });
         return actressList;
     }
@@ -117,6 +124,7 @@ public class ActressLinkScraperService {
         if (pageLoopCnt > 0) {
             for (Integer i = 1; i <= pageLoopCnt; i++) {
                 String actressUrl = getActressUrl(initial, i);
+                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "actressURL {0}", actressUrl);
                 actressLinkList.add(actressUrl);
             }
         }
