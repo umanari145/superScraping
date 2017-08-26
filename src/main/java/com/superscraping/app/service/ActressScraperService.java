@@ -7,6 +7,8 @@ package com.superscraping.app.service;
 
 import com.superscraping.app.ConfigManager;
 import com.superscraping.app.ScraperImpl;
+import com.superscraping.entity.Actress;
+import com.superscraping.entity.Actresses;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,144 +31,130 @@ import org.jsoup.select.Elements;
  *
  * @author Norio
  */
-public class ActressScraperService implements ScraperImpl {
+public class ActressScraperService  {
 
     @Getter
     @Setter
-    private Integer field_count;
+    private Integer fieldOrder;
+
+    
+    public ActressScraperService(){
+        this.fieldOrder = 0;
+    }
+    
+    
+    /**
+     * 女優リストを取得する
+     * 
+     * @param url
+     * @return 女優リスト
+     */
+    public Actresses getActress(String url){
+        Document doc = getDocument(url);
+        Elements elTd = getTableElements(doc);
+        Actresses actresses = getActresses(elTd);
+        return actresses;
+    }
 
     /**
+     * URLからdocオブジェクトを取得
      * 
-     * 
-     * @param linkUrl スタートのURL
-     * @param i 不要だが別メソッドで作ってしまったので仕方なく・・
-     * @return 
+     * @param url リンク
+     * @return document
      */
-    @Override
-    public List<Map<String, String>> scarapingContents(String linkUrl,int i) {
-        String[] vowelArr = {"a", "i", "u", "e", "o"};
-        String[] consonantArr = {"", "k", "s", "t", "n", "h", "m", "y", "r", "w"};
-
-        List<Map<String, String>> totalActressList = new ArrayList<>();
-        //文字を組み合わせる
-        for (String consonant : consonantArr) {
-            for (String vowel : vowelArr) {
-                String initial = consonant + vowel;
-                //これらのイニシャルは処理を行わない
-                List<String> excludeList = new ArrayList<>();
-                String[] excludeArr = {"yi", "ye", "wi", "wu", "we", "wo"};
-                excludeList.addAll(Arrays.asList(excludeArr));
-
-                if (excludeList.indexOf(initial) < 0) {
-                    List<Map<String, String>> actressList = this.getActressListByInitial(linkUrl, initial);
-                    if (actressList.size() > 0) {
-                        totalActressList.addAll(actressList);
-                    }
-                }
-            }
-            if (ConfigManager.IS_ACTRESS_CONTENTS_TEST == true) {
-                break;
-            }
-        }
-        return totalActressList;
-    }
-
-    private List<Map<String, String>> getActressListByInitial(String linkUrl, String initial) {
-        List<Map<String, String>> actressList = new ArrayList<>();
-        //Urlを作る
-        String initialUrl = linkUrl + "keyword=" + initial;
-        int pageLoopCnt = 0;
-        pageLoopCnt = this.getActressCountByGroupInitial(initialUrl);
-        if (pageLoopCnt > 0) {
-             field_count = 0;
-            //サイトにアクセスし、女優データを取る
-            for (Integer i = 1; i <= pageLoopCnt; i++) {
-                String initialUrl2 = initialUrl + "/page=" + i.toString() + "/";
-                List<Map<String, String>> actressListGroupBuInitial = this.getActressMap(initialUrl2, initial);
-                if (actressListGroupBuInitial != null) {
-                    actressList.addAll(actressListGroupBuInitial);
-                }
-            }
-        }
-        return actressList;
-    }
-
-    private Integer getActressCountByGroupInitial(String initialUrl) {
-        Integer actressPageCount = 0;
+    private Document getDocument(String url) {
+        Document doc = null;
         try {
-            URL url = new URL(initialUrl);
-            Document doc = Jsoup.parse(url, 3000);
-            String tmpData = doc.getElementsByClass("list-boxcaptside").first().select("p").first().text();
-            String regex = ".*?全(.*?)ページ中.*?";
-            Pattern p = Pattern.compile(regex);
-            Matcher m = p.matcher(tmpData);
-            //リンクデータを取得する
-            if (m.find() && m.group(1) != null) {
-                actressPageCount = Integer.parseInt(m.group(1));
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(ActressScraperService.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return actressPageCount;
-    }
-
-    private List<Map<String, String>> getActressMap(String initialUrl, String initial) {
-        List<Map<String, String>> actressList = new ArrayList<>();
-        try {
-            URL url = new URL(initialUrl);
-            Document doc = Jsoup.parse(url, 3000);
+            doc = Jsoup.parse(new URL(url), 3000);
             if (doc == null) {
                 return null;
             }
-
-            Element ul = doc.getElementsByClass("act-box-100").first();
-            if (ul == null) {
-                return null;
-            }
-            
-            Elements lis = ul.select("li");
-            for (Element li : lis) {
-                Map<String, String> map = this.getActressMap(li, initial);
-                if (map != null) {
-                    actressList.add(map);
-                }
-            }
-
         } catch (IOException ex) {
             Logger.getLogger(ActressScraperService.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return actressList;
+        return doc;
     }
-
-    private Map<String, String> getActressMap(Element ul, String initial) {
-        Map<String, String> map = new HashMap<>();
-        if (ul.text() != null && ul.text().length() > 0) {
-            //リンク属性のhrefプロパティを取り出す
-            String linkData = ul.getElementsByTag("a").first().attr("href");
-            String regex = "id=(\\d*)";
-            Pattern p = Pattern.compile(regex);
-            Matcher m = p.matcher(linkData);
-            //リンクデータを取得する
-            if (m.find()) {
-                field_count++;
-                String girlsId = m.group(1);
-                if (girlsId != null && girlsId.length() > 0) {
-                    String name = ul.select("img").first().attr("alt");
-                    map = this.makeActressMap(girlsId, name , initial);
-                }
-            }
+    
+    /**
+     * table形式データの取得(HTMLで判別することが不可能)
+     *
+     * @param doc docオブジェクト
+     * @return テーブルElement
+     */
+    private Elements getTableElements(Document doc) {
+        Elements elTd = doc.getElementsByClass("act-box-100").first().select("li");
+        if (elTd == null) {
+            return null;
         }
-        return map;
+        return elTd;
+    }          
+       
+    /**
+     * 女優リストの取得
+     * 
+     * @param elTd 要素(複数)
+     * @return 女優リスト
+     */
+    private Actresses getActresses(Elements elTd) {
+        Actresses actressess = new Actresses();
+        elTd.stream().map((el) -> getActressProp(el))
+                .filter((actress) -> (actress != null))
+                .forEach((actress) -> actressess.addActresses(actress));
+        return actressess;
     }
 
-    private Map<String, String> makeActressMap(String girlsId, String name, String initial) {
-        Map<String, String> map = new HashMap<>();
-        map.put("dmm_girls_id", girlsId);
-        map.put("initial", initial);
-        map.put("name", name);
-        map.put("initial_order", field_count.toString());
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, " name {0} ", name);
-        return map;
+    /**
+     * 女優の属性を取得
+     * 
+     * @param 要素 el
+     * @return 女優
+     */
+    private Actress getActressProp(Element el) {
+        Actress actress = new Actress();
+        actress.setDmmActressId(getActressId(el));
+        if ( actress.getDmmActressId() != null) {
+            countUpFieldOrder();            
+            actress.setName(getActressname(el));
+            actress.setInitialOrder(fieldOrder);
+        }
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "actressName {0}", actress.getName());
+        return actress;
+    }
+    
+    /**
+     * 順番をカウントアップする
+     */
+    private void countUpFieldOrder(){
+        Integer fieldOrder = this.fieldOrder;
+        fieldOrder++;
+        this.fieldOrder = fieldOrder;
+    }
+    
+    
+    /**
+     * 女優名を取得
+     * 
+     * @param el 要素
+     * @return 女優名
+     */
+    private String getActressname(Element el){
+        return el.select("img").first().attr("alt");
+    }
+    
+    /**
+     * 女優Idの取得
+     * 
+     * @param el 要素
+     * @return 女優id
+     */
+    private Integer getActressId(Element el) {
+        String linkData = el.getElementsByTag("a").first().attr("href");
+        Pattern p = Pattern.compile("id=(\\d*)");
+        Matcher m = p.matcher(linkData);
+        String actressId = null;
+        if (m.find()) {
+            actressId = m.group(1);
+        }
+        return Integer.parseInt(actressId);
     }
 }
