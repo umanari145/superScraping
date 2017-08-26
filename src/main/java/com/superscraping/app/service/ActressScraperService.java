@@ -5,21 +5,13 @@
  */
 package com.superscraping.app.service;
 
-import com.superscraping.app.ConfigManager;
-import com.superscraping.app.ScraperImpl;
+import com.superscraping.em.helper.ScraperHelper;
 import com.superscraping.entity.Actress;
 import com.superscraping.entity.Actresses;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 import org.jsoup.Jsoup;
@@ -50,31 +42,12 @@ public class ActressScraperService  {
      * @return 女優リスト
      */
     public Actresses getActress(String url){
-        Document doc = getDocument(url);
+        Document doc = ScraperHelper.getDocument(url);
         Elements elTd = getTableElements(doc);
         Actresses actresses = getActresses(elTd);
         return actresses;
     }
-
-    /**
-     * URLからdocオブジェクトを取得
-     * 
-     * @param url リンク
-     * @return document
-     */
-    private Document getDocument(String url) {
-        Document doc = null;
-        try {
-            doc = Jsoup.parse(new URL(url), 3000);
-            if (doc == null) {
-                return null;
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(ActressScraperService.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return doc;
-    }
-    
+   
     /**
      * table形式データの取得(HTMLで判別することが不可能)
      *
@@ -149,12 +122,7 @@ public class ActressScraperService  {
      */
     private Integer getActressId(Element el) {
         String linkData = el.getElementsByTag("a").first().attr("href");
-        Pattern p = Pattern.compile("id=(\\d*)");
-        Matcher m = p.matcher(linkData);
-        String actressId = null;
-        if (m.find()) {
-            actressId = m.group(1);
-        }
+        String actressId = ScraperHelper.getExtract("id=(\\d*)", linkData);
         return Integer.parseInt(actressId);
     }
 }
